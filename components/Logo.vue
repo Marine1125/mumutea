@@ -6,7 +6,6 @@
     <div class="Triangle Triangle--four"/>
   </div>
 </template>
-
 <style>
 .VueToNuxtLogo {
   display: inline-block;
