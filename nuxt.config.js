@@ -42,7 +42,7 @@ module.exports = {
    ** Global CSS
    */
   css: [
-    '@assets/icon/iconfont.css',
+    '~assets/icon/iconfont.css',
     'element-ui/lib/theme-chalk/reset.css',
     'element-ui/lib/theme-chalk/index.css'
   ],
@@ -57,13 +57,24 @@ module.exports = {
    */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy'
+  ],
+  proxy: [
+    [
+      '/api',
+      {
+        target: 'http://localhost:3000', // api主机
+        pathRewrite: { '^/api': '/' }
+      }
+    ]
   ],
   /*
    ** Axios module configuration
    */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+    proxy: true
   },
 
   /*

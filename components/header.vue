@@ -1,30 +1,52 @@
 <template>
   <div>
-    <el-header>
-      <el-menu
-        class="el-menu-demo"
-        mode="horizontal">
-        <el-menu-item index="1">处理中心</el-menu-item>
-        <el-submenu index="2">
-          <template slot="title">我的工作台</template>
-          <el-menu-item index="2-1">选项1</el-menu-item>
-          <el-menu-item index="2-2">选项2</el-menu-item>
-          <el-menu-item index="2-3">选项3</el-menu-item>
-          <el-submenu index="2-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="2-4-1">选项1</el-menu-item>
-            <el-menu-item index="2-4-2">选项2</el-menu-item>
-            <el-menu-item index="2-4-3">选项3</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-        <el-menu-item
-          index="3"
-          disabled>消息中心</el-menu-item>
-        <el-menu-item index="4"><a
-          href="https://www.ele.me"
-          target="_blank">订单管理</a></el-menu-item>
-      </el-menu>
+    <el-header class="header">
+      <div class="logolink">
+        <a href="/">
+          <img
+            src="~/static/logo2.png"
+            alt="">
+          <div class="logotext">木木茶</div>
+        </a>
+      </div>
+      <a
+        href="/signin"
+        class="floatright"><el-button>登录</el-button></a>
+      <a
+        href="/signup"
+        class="floatright"><el-button>注册</el-button></a>
       <div class="line"/>
     </el-header>
   </div>
 </template>
+<style scoped>
+.header {
+  padding: 0 15%;
+  background-color: #f1f1f1;
+}
+.floatright {
+  float: right;
+}
+.el-button {
+  margin: 10px;
+}
+img {
+  width: 117px;
+  height: 40px;
+}
+.logolink {
+  margin: 10px;
+  width: 170px;
+  height: 40px;
+  float: left;
+}
+.logotext {
+  font-size: 15px;
+  color: black;
+  margin: 10px 0;
+  float: right;
+}
+</style>
+<script>
+export default {}
+</script>
