@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="block">
+  <div class="content">
+    <div >
       <el-carousel height="450px">
         <el-carousel-item
           v-for="item in 4"
@@ -9,12 +9,20 @@
         </el-carousel-item>
       </el-carousel>
     </div>
+    <el-row class="category">
+      <el-col
+        :span="3"
+        :offset="3"><h3>木木家的厨房</h3></el-col>
+      <el-col
+        :span="1"
+        :offset="14"><a href="/">更多</a></el-col>
+    </el-row>
     <el-row :gutter="40">
       <el-col
-        v-for="(o,index) in 4"
-        :span="4"
+        v-for="(o,index) in 6"
+        :span="3"
         :key="o"
-        :offset="index==0 ? 4:0"
+        :offset="index==0 ? 3:0"
       >
         <el-card :body-style="{ padding: '0px' }">
           <img
@@ -26,7 +34,100 @@
               <time class="time">{{ currentDate }}</time>
               <el-button
                 type="text"
-                class="button">操作按钮</el-button>
+                class="button">详细信息</el-button>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row class="category">
+      <el-col
+        :span="3"
+        :offset="3"><h3>木木家的水吧</h3></el-col>
+      <el-col
+        :span="1"
+        :offset="14"><a href="/">更多</a></el-col>
+    </el-row>
+    <el-row :gutter="40">
+      <el-col
+        v-for="(o,index) in 6"
+        :span="3"
+        :key="o"
+        :offset="index==0 ? 3:0"
+      >
+        <el-card :body-style="{ padding: '0px' }">
+          <img
+            src="~/assets/images/hamburger.png"
+            class="image">
+          <div style="padding: 14px;">
+            <span>好吃的汉堡</span>
+            <div class="bottom clearfix">
+              <time class="time">{{ currentDate }}</time>
+              <el-button
+                type="text"
+                class="button">详细信息</el-button>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row class="category">
+      <el-col
+        :span="3"
+        :offset="3"><h3>木木家的烘焙</h3></el-col>
+      <el-col
+        :span="1"
+        :offset="14"><a href="/">更多</a></el-col>
+    </el-row>
+    <el-row :gutter="40">
+      <el-col
+        v-for="(o,index) in 6"
+        :span="3"
+        :key="o"
+        :offset="index==0 ? 3:0"
+      >
+        <el-card :body-style="{ padding: '0px' }">
+          <img
+            src="~/assets/images/hamburger.png"
+            class="image">
+          <div style="padding: 14px;">
+            <span>好吃的汉堡</span>
+            <div class="bottom clearfix">
+              <time class="time">{{ currentDate }}</time>
+              <el-button
+                type="text"
+                class="button">详细信息</el-button>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row class="category">
+      <el-col
+        :span="3"
+        :offset="3"><h3>木木家的手工</h3></el-col>
+      <el-col
+        :span="1"
+        :offset="14"><a href="/">更多</a></el-col>
+    </el-row>
+    <el-row :gutter="40">
+      <el-col
+        v-for="(o,index) in 6"
+        :span="3"
+        :key="o"
+        :offset="index==0 ? 3:0"
+      >
+        <el-card :body-style="{ padding: '0px' }">
+          <img
+            src="~/assets/images/hamburger.png"
+            class="image">
+          <div style="padding: 14px;">
+            <span>好吃的汉堡</span>
+            <div class="bottom clearfix">
+              <time class="time">{{ currentDate }}</time>
+              <el-button
+                type="text"
+                class="button">详细信息</el-button>
             </div>
           </div>
         </el-card>
@@ -34,18 +135,6 @@
     </el-row>
   </div>
 </template>
-
-<script>
-import Logo from '~/components/Logo.vue'
-
-export default {
-  components: {
-    Logo
-  },
-  layout: 'mainlayout' // you can set a custom layout for the error page
-}
-</script>
-
 <style>
 .el-carousel__item h3 {
   color: #475669;
@@ -91,6 +180,13 @@ export default {
 
 .clearfix:after {
   clear: both;
+}
+.category {
+  margin: 20px 0px;
+}
+h3 {
+  font-weight: 400;
+  color: #1f2f3d;
 }
 </style>
 <script>

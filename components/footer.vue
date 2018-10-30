@@ -24,18 +24,6 @@
             href="https://github.com/ElementUI/element-theme"
             target="_blank"
             class="footer-main-link">自定义主题工具</a>
-          <a
-            href="https://github.com/ElementUI/theme-chalk-preview"
-            target="_blank"
-            class="footer-main-link">在线主题生成</a>
-          <a
-            href="https://github.com/elemefe/element-react"
-            target="_blank"
-            class="footer-main-link">Element-React</a>
-          <a
-            href="https://github.com/ElemeFE/element-angular"
-            target="_blank"
-            class="footer-main-link">Element-Angular</a>
         </div>
         <div class="footer-main">
           <h4>社区</h4><a
@@ -95,7 +83,8 @@
   width: 100%;
   padding: 40px 150px;
   box-sizing: border-box;
-  height: 340px;
+  height: 220px;
+  margin-top: 10px;
 }
 .footer .container {
   box-sizing: border-box;

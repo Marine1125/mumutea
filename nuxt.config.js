@@ -43,6 +43,7 @@ module.exports = {
    */
   css: [
     '~assets/icon/iconfont.css',
+    '~assets/stylesheet/main.css',
     'element-ui/lib/theme-chalk/reset.css',
     'element-ui/lib/theme-chalk/index.css'
   ],

@@ -40,6 +40,12 @@
           v-model="ruleForm.cpassword"
           type="password"/>
       </el-form-item>
+      <el-form-item
+        label=""
+        prop="clause">
+        <el-checkbox v-model="ruleForm.clause"/>
+        <a href="/terms">我阅读并同意条款</a>
+      </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -72,6 +78,27 @@ export default {
             type: 'string',
             message: '请输入昵称',
             trigger: 'change'
+          },
+          {
+            validator: async (rule, value, callback) => {
+              let username = await this.$axios
+                .get('/users/getUsers', { params: { username: value } })
+                .then(resp => {
+                  if (resp.status === 200) {
+                    if (resp.data && resp.data.code === 0) {
+                      if (value === resp.data.username) {
+                        callback(new Error('用户名已存在'))
+                      } else {
+                        callback()
+                      }
+                    } else {
+                      this.error = resp.data.msg
+                    }
+                  } else {
+                    console.log('error')
+                  }
+                })
+            }
           }
         ],
         email: [
@@ -114,6 +141,14 @@ export default {
               }
             }
           }
+        ],
+        clause: [
+          {
+            type: 'string',
+            required: 'true',
+            message: '请阅读并同意条款',
+            trigger: 'blur'
+          }
         ]
       }
     }
@@ -129,17 +164,17 @@ export default {
               username: window.encodeURIComponent(self.ruleForm.name),
               password: CryptoJS.MD5(self.ruleForm.password).toString(),
               email: self.ruleForm.email,
-              code: self.ruleForm.code
+              code: self.ruleForm.vcode
             })
-            .then((status, data) => {
-              if (status === 200) {
-                if (data && data.code === 0) {
-                  location.href = '/login'
+            .then(resp => {
+              if (resp.status === 200) {
+                if (resp.data && resp.data.code === 0) {
+                  self.$router.push('/signin')
                 } else {
                   self.error = data.msg
                 }
               } else {
-                self.error = `服务器错误错误码${status}`
+                self.error = `服务器错误，错误码${status}`
               }
               setTimeout(function() {
                 self.error = ''
@@ -171,15 +206,16 @@ export default {
             username: window.encodeURIComponent(self.ruleForm.name),
             email: self.ruleForm.email
           })
-          .then((status, data) => {
-            if (status === 200) {
-              if (data && data.code === 0) {
+          .then(resp => {
+            if (resp.status === 200) {
+              if (resp.data && resp.data.code === 0) {
                 let count = 60
                 self.statusMsg = `验证码已发送，剩余${count--}秒`
                 self.timerid = setInterval(function() {
                   self.statusMsg = `验证码已发送，剩余${count--}秒`
                   if (count === 0) {
                     clearInterval(self.timerid)
+                    self.statusMsg = ''
                   }
                 }, 1000)
               }
@@ -192,7 +228,6 @@ export default {
     resetForm: function() {
       this.ruleForm = {}
     }
-  },
-  layout: 'mainlayout'
+  }
 }
 </script>

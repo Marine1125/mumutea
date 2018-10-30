@@ -55,7 +55,10 @@ router.post('/signup', async ctx => {
     email
   })
   if (newuser) {
-    let result = await Axios.post('/users/signin', { username, password })
+    let result = await Axios.post('http://localhost:3000/users/signin', {
+      username,
+      password
+    })
 
     if (result.data && result.data.code === 0) {
       ctx.body = {
@@ -135,15 +138,9 @@ router.post('/verify', async (ctx, next) => {
     if (error) {
       return console.log('send mail error:' + error)
     } else {
-      Store.hset(
-        `nodemail:${ko.user}`,
-        'code',
-        ko.code,
-        'expire',
-        ko.expire,
-        'email',
-        ko.email
-      )
+      Store.hset(`nodemail:${ko.user}`, 'code', ko.code)
+      Store.hset(`nodemail:${ko.user}`, 'expire', ko.expire)
+      Store.hset(`nodemail:${ko.user}`, 'email', ko.email)
     }
   })
   ctx.body = {
@@ -166,7 +163,7 @@ router.get('/exit', async (ctx, next) => {
   }
 })
 
-router.get('/getUser', async (ctx, next) => {
+router.get('/getLoginUser', async (ctx, next) => {
   if (ctx.isAuthenticated()) {
     const { username, email } = ctx.session.passport.user
     ctx.body = {
@@ -179,6 +176,30 @@ router.get('/getUser', async (ctx, next) => {
       email: ''
     }
   }
+})
+
+router.get('/getUsers', async ctx => {
+  let username = ctx.query.username
+  console.log(username)
+  let where = {
+    username
+  }
+  let result = await User.find(where)
+  console.log(result)
+  if (result.length) {
+    ctx.body = {
+      code: 0,
+      msg: '',
+      username: result[0].username
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '',
+      username: ''
+    }
+  }
+  console.log('user out')
 })
 
 export default router
