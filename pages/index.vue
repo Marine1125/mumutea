@@ -19,22 +19,23 @@
     </el-row>
     <el-row :gutter="40">
       <el-col
-        v-for="(o,index) in 6"
+        v-for="(cookData,index) in cookDatas"
         :span="3"
-        :key="o"
+        :key="'cook'+ index"
         :offset="index==0 ? 3:0"
       >
         <el-card :body-style="{ padding: '0px' }">
           <img
-            src="~/assets/images/hamburger.png"
+            :src="cookData.filename"
             class="image">
           <div style="padding: 14px;">
-            <span>好吃的汉堡</span>
+            <span>{{ cookData.title }}</span>
             <div class="bottom clearfix">
-              <time class="time">{{ currentDate }}</time>
+              <time class="time">{{ cookData.create }}</time>
               <el-button
                 type="text"
-                class="button">详细信息</el-button>
+                class="button"
+                @click="getDetails(cookData._id)">详细信息</el-button>
             </div>
           </div>
         </el-card>
@@ -50,22 +51,23 @@
     </el-row>
     <el-row :gutter="40">
       <el-col
-        v-for="(o,index) in 6"
+        v-for="(drinkData,index) in drinkDatas"
         :span="3"
-        :key="o"
+        :key="'drink'+ index"
         :offset="index==0 ? 3:0"
       >
         <el-card :body-style="{ padding: '0px' }">
           <img
-            src="~/assets/images/hamburger.png"
+            :src="drinkData.filename"
             class="image">
           <div style="padding: 14px;">
-            <span>好吃的汉堡</span>
+            <span>{{ drinkData.title }}</span>
             <div class="bottom clearfix">
-              <time class="time">{{ currentDate }}</time>
+              <time class="time">{{ drinkData.create }}</time>
               <el-button
                 type="text"
-                class="button">详细信息</el-button>
+                class="button"
+                @click="getDetails(drinkData._id)">详细信息</el-button>
             </div>
           </div>
         </el-card>
@@ -81,22 +83,23 @@
     </el-row>
     <el-row :gutter="40">
       <el-col
-        v-for="(o,index) in 6"
+        v-for="(bakeData,index) in bakeDatas"
         :span="3"
-        :key="o"
+        :key="'bake'+ index"
         :offset="index==0 ? 3:0"
       >
         <el-card :body-style="{ padding: '0px' }">
           <img
-            src="~/assets/images/hamburger.png"
+            :src="bakeData.filename"
             class="image">
           <div style="padding: 14px;">
-            <span>好吃的汉堡</span>
+            <span>{{ bakeData.title }}</span>
             <div class="bottom clearfix">
-              <time class="time">{{ currentDate }}</time>
+              <time class="time">{{ bakeData.create }}</time>
               <el-button
                 type="text"
-                class="button">详细信息</el-button>
+                class="button"
+                @click="getDetails(bakeData._id)">详细信息</el-button>
             </div>
           </div>
         </el-card>
@@ -112,22 +115,22 @@
     </el-row>
     <el-row :gutter="40">
       <el-col
-        v-for="(o,index) in 6"
+        v-for="(handworkData,index) in handworkDatas"
         :span="3"
-        :key="o"
-        :offset="index==0 ? 3:0"
-      >
+        :key="'handwork'+ index"
+        :offset="index==0 ? 3:0">
         <el-card :body-style="{ padding: '0px' }">
           <img
-            src="~/assets/images/hamburger.png"
+            :src="handworkData.filename"
             class="image">
           <div style="padding: 14px;">
-            <span>好吃的汉堡</span>
+            <span>{{ handworkData.title }}</span>
             <div class="bottom clearfix">
-              <time class="time">{{ currentDate }}</time>
+              <time class="time">{{ handworkData.create }}</time>
               <el-button
                 type="text"
-                class="button">详细信息</el-button>
+                class="button"
+                @click="getDetails(handworkData._id)">详细信息</el-button>
             </div>
           </div>
         </el-card>
@@ -168,6 +171,7 @@
 }
 
 .image {
+  height: 250px;
   width: 100%;
   display: block;
 }
@@ -193,7 +197,29 @@ h3 {
 export default {
   data() {
     return {
-      currentDate: new Date()
+      cookDatas: [],
+      drinkDatas: [],
+      bakeDatas: [],
+      handworkDatas: []
+    }
+  },
+  async mounted() {
+    await this.$axios.get('/items/getItems').then(resp => {
+      this.cookDatas = resp.data.data
+    })
+    await this.$axios.get('/items/getItems').then(resp => {
+      this.drinkDatas = resp.data.data
+    })
+    await this.$axios.get('/items/getItems').then(resp => {
+      this.bakeDatas = resp.data.data
+    })
+    await this.$axios.get('/items/getItems').then(resp => {
+      this.handworkDatas = resp.data.data
+    })
+  },
+  methods: {
+    getDetails: function(id) {
+      this.$router.push({ name: 'itemDetail', params: { id: id } })
     }
   },
   layout: 'mainlayout'

@@ -77,7 +77,16 @@ module.exports = {
     // See https://github.com/nuxt-community/axios-module#options
     proxy: true
   },
-
+  loaders: [
+    {
+      test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+      loader: 'url-loader',
+      query: {
+        limit: 10000,
+        name: 'img/[name].[hash:7].[ext]'
+      }
+    }
+  ],
   /*
    ** Build configuration
    */

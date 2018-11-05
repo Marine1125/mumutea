@@ -5,3 +5,9 @@ body {
 .content{
   min-height: 1000px;
 }
+.float-left{
+  float: left;
+}
+.float-right{
+  float: right;
+}

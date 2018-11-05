@@ -8,6 +8,7 @@ import json from 'koa-json'
 import dbConfig from './dbs/config'
 import passport from './utils/passport'
 import users from './interface/users'
+import items from './interface/items'
 
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
@@ -54,7 +55,7 @@ async function start() {
 
   //Init router
   app.use(users.routes()).use(users.allowedMethods())
-
+  app.use(items.routes()).use(items.allowedMethods())
   app.use(ctx => {
     ctx.status = 200 // koa defaults to 404 when it sees that status is unset
 
