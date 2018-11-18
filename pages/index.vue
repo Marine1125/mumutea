@@ -1,28 +1,26 @@
 <template>
   <div class="content">
-    <div >
-      <el-carousel height="450px">
-        <el-carousel-item
-          v-for="item in 4"
-          :key="item">
-          <h3>{{ item }}</h3>
-        </el-carousel-item>
-      </el-carousel>
+    <div>
+      <el-row><Search/></el-row>
+      <el-row><Carousel/>
+      </el-row>
     </div>
     <el-row class="category">
       <el-col
-        :span="3"
-        :offset="3"><h3>木木家的厨房</h3></el-col>
+        :span="3"><h3>木木家的厨房</h3></el-col>
       <el-col
         :span="1"
-        :offset="14"><a href="/">更多</a></el-col>
+        :offset="20">
+        <el-button
+          type="text"
+          @click="gouToMore('dish')">更多</el-button>
+      </el-col>
     </el-row>
-    <el-row :gutter="40">
+    <el-row :gutter="20">
       <el-col
-        v-for="(cookData,index) in cookDatas"
-        :span="3"
+        v-for="(cookData,index) in $store.state.index.cookList"
+        :span="4"
         :key="'cook'+ index"
-        :offset="index==0 ? 3:0"
       >
         <el-card :body-style="{ padding: '0px' }">
           <img
@@ -43,18 +41,20 @@
     </el-row>
     <el-row class="category">
       <el-col
-        :span="3"
-        :offset="3"><h3>木木家的水吧</h3></el-col>
+        :span="3"><h3>木木家的水吧</h3></el-col>
       <el-col
         :span="1"
-        :offset="14"><a href="/">更多</a></el-col>
+        :offset="20">
+        <el-button
+          type="text"
+          @click="gouToMore('drink')">更多</el-button>
+      </el-col>
     </el-row>
-    <el-row :gutter="40">
+    <el-row :gutter="20">
       <el-col
-        v-for="(drinkData,index) in drinkDatas"
-        :span="3"
+        v-for="(drinkData,index) in $store.state.index.drinkList"
+        :span="4"
         :key="'drink'+ index"
-        :offset="index==0 ? 3:0"
       >
         <el-card :body-style="{ padding: '0px' }">
           <img
@@ -75,18 +75,20 @@
     </el-row>
     <el-row class="category">
       <el-col
-        :span="3"
-        :offset="3"><h3>木木家的烘焙</h3></el-col>
+        :span="3"><h3>木木家的烘焙</h3></el-col>
       <el-col
         :span="1"
-        :offset="14"><a href="/">更多</a></el-col>
+        :offset="20">
+        <el-button
+          type="text"
+          @click="gouToMore('bake')">更多</el-button>
+      </el-col>
     </el-row>
-    <el-row :gutter="40">
+    <el-row :gutter="20">
       <el-col
-        v-for="(bakeData,index) in bakeDatas"
-        :span="3"
+        v-for="(bakeData,index) in $store.state.index.bakeList"
+        :span="4"
         :key="'bake'+ index"
-        :offset="index==0 ? 3:0"
       >
         <el-card :body-style="{ padding: '0px' }">
           <img
@@ -107,18 +109,20 @@
     </el-row>
     <el-row class="category">
       <el-col
-        :span="3"
-        :offset="3"><h3>木木家的手工</h3></el-col>
+        :span="3"><h3>木木家的手工</h3></el-col>
       <el-col
         :span="1"
-        :offset="14"><a href="/">更多</a></el-col>
+        :offset="20">
+        <el-button
+          type="text"
+          @click="gouToMore('handwork')">更多</el-button>
+      </el-col>
     </el-row>
-    <el-row :gutter="40">
+    <el-row :gutter="20">
       <el-col
-        v-for="(handworkData,index) in handworkDatas"
-        :span="3"
-        :key="'handwork'+ index"
-        :offset="index==0 ? 3:0">
+        v-for="(handworkData,index) in $store.state.index.handworkList"
+        :span="4"
+        :key="'handwork'+ index">
         <el-card :body-style="{ padding: '0px' }">
           <img
             :src="handworkData.filename"
@@ -171,7 +175,7 @@
 }
 
 .image {
-  height: 250px;
+  height: 200px;
   width: 100%;
   display: block;
 }
@@ -194,7 +198,13 @@ h3 {
 }
 </style>
 <script>
+import Carousel from '../components/index/carousel.vue'
+import Search from '../components/index/search.vue'
 export default {
+  components: {
+    Carousel,
+    Search
+  },
   data() {
     return {
       cookDatas: [],
@@ -203,25 +213,17 @@ export default {
       handworkDatas: []
     }
   },
-  async mounted() {
-    await this.$axios.get('/items/getItems').then(resp => {
-      this.cookDatas = resp.data.data
-    })
-    await this.$axios.get('/items/getItems').then(resp => {
-      this.drinkDatas = resp.data.data
-    })
-    await this.$axios.get('/items/getItems').then(resp => {
-      this.bakeDatas = resp.data.data
-    })
-    await this.$axios.get('/items/getItems').then(resp => {
-      this.handworkDatas = resp.data.data
-    })
-  },
   methods: {
     getDetails: function(id) {
-      this.$router.push({ name: 'itemDetail', params: { id: id } })
+      this.$router.push({ path: '/items/itemDetail', query: { id: id } })
+    },
+    gouToMore: function(category) {
+      this.$store.commit('item/setCategory', category)
+      this.$router.push({
+        path: '/items/itemList',
+        query: { category: category }
+      })
     }
-  },
-  layout: 'mainlayout'
+  }
 }
 </script>

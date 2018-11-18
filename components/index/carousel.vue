@@ -1,0 +1,88 @@
+<template>
+  <div >
+    <el-col
+      :span="4"
+      style=""
+      class="rainbow">
+      <el-row class="item-category">木木家</el-row>
+      <hr>
+      <el-row class="item-category">
+        <el-button
+          type="text"
+          @click="gouToMore('dish')">美食</el-button>
+      </el-row>
+      <el-row class="item-category">
+        <el-button
+          type="text"
+          @click="gouToMore('drink')">饮品</el-button>
+      </el-row>
+      <el-row class="item-category"><el-button
+        type="text"
+        @click="gouToMore('bake')">烘焙</el-button>
+      </el-row>
+      <el-row class="item-category">
+        <el-button
+          type="text"
+          @click="gouToMore('handwork')">手工</el-button>
+      </el-row>
+    </el-col>
+    <el-col
+      :span="19"
+      :offset="1">
+      <el-carousel height="450px">
+        <el-carousel-item
+          v-for="item in $store.state.item.hotItemList"
+          :key="item._id">
+          <a :href="'/items/itemDetail?id='+ item._id">
+            <img
+              :src="item.filename"
+              alt=""
+              @click="goToDetail(item._id)">
+          <h3>{{ item.title }}</h3></a>
+        </el-carousel-item>
+      </el-carousel>
+    </el-col>
+  </div>
+</template>
+<style scoped>
+.item-category {
+  padding: 13px;
+  height: 15%;
+}
+.el-carousel__item img {
+  width: 100%;
+  height: 450px;
+}
+.el-carousel__item h3 {
+  font-size: 30px;
+  padding-left: 30px;
+  margin-top: -150px;
+  text-align: left;
+  color: white;
+}
+.item-category .el-button {
+  color: white;
+}
+.rainbow {
+  height: 450px;
+  border-radius: 4px;
+  background: -webkit-linear-gradient(
+    -90deg,
+    rgba(2, 181, 157, 0.85) 2%,
+    rgba(22, 146, 183, 0.85) 100%
+  );
+}
+</style>
+<script>
+export default {
+  methods: {
+    gouToMore: function(category) {
+      this.$store.commit('item/setCategory', category)
+      this.$router.push({
+        path: '/items/itemList',
+        query: { category: category }
+      })
+    }
+  }
+}
+</script>

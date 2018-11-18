@@ -15,19 +15,26 @@
         <a
           href="/exit"
           class="floatright">登出</a>
-        <a
-          href="/usercenter"
-          class="floatright">你好：{{ username }}！</a>
+        <el-dropdown
+          trigger="click"
+          class="floatright">
+          <span class="el-dropdown-link">
+            你好！{{ username }}<i class="el-icon-arrow-down el-icon--right"/>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item><a href="/items/uploadItems">添加Item</a></el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
 
       </div>
       <div
         v-else
         class="header-right">
         <a
-          href="/signup"
+          href="/users/signup"
           class="floatright">注册</a>
         <a
-          href="/signin"
+          href="/users/signin"
           class="floatright">立即登录</a>
 
       </div>
@@ -65,6 +72,11 @@ img {
   color: black;
   float: right;
 }
+.el-dropdown {
+  float: right;
+  margin: 20px;
+  color: #409eff;
+}
 </style>
 <script>
 export default {
@@ -84,13 +96,6 @@ export default {
         }
       }
     })
-  },
-  updated() {
-    console.group('updated 更新完成状态===============》')
-    console.log('%c%s', 'color:red', 'el     : ' + this.$el)
-    console.log(this.$el)
-    console.log('%c%s', 'color:red', 'data   : ' + this.$data)
-    console.log('%c%s', 'color:red', 'message: ' + this.message)
   }
 }
 </script>

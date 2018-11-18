@@ -261,10 +261,10 @@ export default {
   methods: {
     onFileSuccess: function(res, file, index) {
       console.log(index)
-      this.itemForm.steps[index].stepImg = file.response.file
+      this.itemForm.steps[index].stepImg = '/' + file.response.file
     },
     filenameUploadSuccess: function(res, file) {
-      this.itemForm.filename = file.response.file
+      this.itemForm.filename = '/' + file.response.file
     },
     createItem: function() {
       self = this

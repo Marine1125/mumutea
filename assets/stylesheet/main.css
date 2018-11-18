@@ -3,7 +3,9 @@ body {
   margin: 0px !important;
 }
 .content{
-  min-height: 1000px;
+  min-height: 1200px;
+  margin-top: 30px;
+  padding: 0 20% 0 20%;
 }
 .float-left{
   float: left;

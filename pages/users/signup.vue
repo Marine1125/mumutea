@@ -169,7 +169,7 @@ export default {
             .then(resp => {
               if (resp.status === 200) {
                 if (resp.data && resp.data.code === 0) {
-                  self.$router.push('/signin')
+                  self.$router.push('/users/signin')
                 } else {
                   self.error = data.msg
                 }

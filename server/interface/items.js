@@ -60,9 +60,19 @@ router.post('/addItem', async (ctx, next) => {
     }
   }
 })
+
 router.get('/getItems', async (ctx, next) => {
-  console.log('123')
-  let items = await Item.find({})
+  let title = ''
+  if (ctx.query.title) {
+    title = decodeURIComponent(ctx.query.title)
+  }
+  let items = await Item.find({
+    category: { $regex: ctx.query.category ? ctx.query.category : '' },
+    title: {
+      $regex: title ? title : ''
+    }
+  })
+  console.log(items)
   if (items) {
     ctx.body = {
       code: 0,
@@ -76,10 +86,32 @@ router.get('/getItems', async (ctx, next) => {
     }
   }
 })
+
+router.get('/getItemsByTitle', async (ctx, next) => {
+  console.log(ctx.query.title)
+  let title = ''
+  if (ctx.query.title) {
+    title = decodeURIComponent(ctx.query.title)
+  }
+  let items = await Item.find({ title: { $regex: title } }).limit(8)
+  if (items) {
+    ctx.body = {
+      code: 0,
+      data: items,
+      msg: ''
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      msg: 'create error'
+    }
+  }
+})
+
 router.get('/getItemDetail', async (ctx, next) => {
   console.log('123')
   let _id = ctx.query._id
-  let item = await Item.find({
+  let item = await Item.findOne({
     _id
   })
   if (item) {
@@ -92,6 +124,25 @@ router.get('/getItemDetail', async (ctx, next) => {
     ctx.body = {
       code: -1,
       msg: 'data not exist'
+    }
+  }
+})
+
+router.get('/getHotItems', async (ctx, next) => {
+  let items = await Item.find({
+    category: { $regex: ctx.query.category ? ctx.query.category : '' },
+    title: { $regex: ctx.query.keyword ? ctx.query.keyword : '' }
+  }).limit(4)
+  if (items) {
+    ctx.body = {
+      code: 0,
+      data: items,
+      msg: ''
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      msg: 'create error'
     }
   }
 })
