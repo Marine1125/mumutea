@@ -144,7 +144,6 @@ export default {
         ],
         clause: [
           {
-            type: 'string',
             required: 'true',
             message: '请阅读并同意条款',
             trigger: 'blur'

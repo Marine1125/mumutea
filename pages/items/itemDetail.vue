@@ -2,14 +2,25 @@
   <div class="content">
     <Crumbs :breadcrumbs="breadcrumbs"/>
     <h1>{{ itemDetail.title }}</h1>
+    <div>
+      <el-tag
+        v-for="item in itemDetail.label"
+        :key="item">{{ item }}</el-tag>
+    </div>
     <hr >
     <img
-      :src="'/'+itemDetail.filename"
+      :src="itemDetail.filename"
       alt="">
+    <h1>
+      简述
+    </h1>
+    <hr >
+    <div>{{ itemDetail.summary }}</div>
     <h1>
       用料
     </h1>
     <hr >
+
     <Ingredients :ingredients="itemDetail.ingredients"/>
     <h1>
       步骤
@@ -34,6 +45,9 @@ img {
 }
 h1 {
   color: #409eff;
+}
+.el-tag {
+  margin-right: 10px;
 }
 </style>
 <script>

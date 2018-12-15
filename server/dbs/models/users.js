@@ -13,6 +13,24 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true
+  },
+  photo: {
+    type: String,
+    required: true
+  },
+  create: {
+    type: Date,
+    default: Date.now
+  },
+  birthday: {
+    type: Date
+  },
+  introduce: {
+    type: String,
+    default: '这个博主很懒，什么都没留下'
+  },
+  sex: {
+    type: String
   }
 })
 

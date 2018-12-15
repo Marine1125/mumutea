@@ -6,7 +6,7 @@
       class="card">
       <el-col :span="6">
         <img
-          :src="'/'+ item.filename"
+          :src="item.filename"
           alt="">
       </el-col>
       <el-col :span="6">

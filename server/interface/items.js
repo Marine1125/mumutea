@@ -25,12 +25,16 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 //路由
 router.post('/upload', upload.single('file'), async (ctx, next) => {
+  let filePath = ctx.req.file.path
+  filePath = filePath.replace('static\\', '')
+  filePath = filePath.replace('static/', '')
   ctx.body = {
-    file: ctx.req.file.path.replace('static\\', '') //返回文件路径
+    file: filePath //返回文件路径
   }
 })
 
 router.post('/addItem', async (ctx, next) => {
+  const creator = ctx.session.passport.user.username
   console.log('123')
   const {
     title,
@@ -38,7 +42,9 @@ router.post('/addItem', async (ctx, next) => {
     tips,
     steps,
     ingredients,
-    filename
+    filename,
+    summary,
+    label
   } = ctx.request.body
   let newItem = await Item.create({
     title,
@@ -46,7 +52,10 @@ router.post('/addItem', async (ctx, next) => {
     tips,
     steps,
     ingredients,
-    filename
+    filename,
+    summary,
+    label,
+    creator
   })
   if (newItem) {
     ctx.body = {

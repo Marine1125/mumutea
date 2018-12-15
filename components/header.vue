@@ -23,6 +23,9 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item><a href="/items/uploadItems">添加Item</a></el-dropdown-item>
+            <el-dropdown-item><a href="/users/usercenter">用户中心</a></el-dropdown-item>
+            <el-dropdown-item divided><a href="/backup/categoryList">分类管理</a></el-dropdown-item>
+            <el-dropdown-item><a href="/backup/LabelList">标签管理</a></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
 

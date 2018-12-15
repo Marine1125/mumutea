@@ -13,42 +13,92 @@
         <el-input v-model="itemForm.title"/>
       </el-form-item>
       <el-form-item
-        label="上传图片"
+        label="封面"
         prop="filename">
         <el-upload
           :on-success="filenameUploadSuccess"
           :limit="1"
-          :file-list="fileList"
+          :show-file-list="false"
+          drag
           class="upload-demo"
-          action="/items/upload"
-          multiple>
-          <el-button
-            size="small"
-            type="primary">点击上传</el-button>
+          action="/items/upload">
+          <img
+            v-if="itemForm.filename"
+            :src="itemForm.filename"
+            class="avatar-cover">
           <div
-            slot="tip"
-            class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            v-else
+            style="height:100%">
+            <div>最佳尺寸是1280X1024</div>
+          <div><a>点击上传</a></div></div>
         </el-upload>
+      </el-form-item>
+      <el-form-item
+        label="简述"
+        prop="summary">
+        <el-input
+          v-model="itemForm.summary"
+          rows="5"
+          type="textarea"/>
+      </el-form-item>
+      <el-form-item
+        label="标签"
+        prop="label">
+        <el-select
+          v-model="itemForm.label"
+          multiple
+          placeholder="请选择"
+          style="width:100%">
+          <el-option
+            v-for="item in labels"
+            :key="item._id"
+            :label="item.labelname"
+            :value="item.labelname"/>
+        </el-select>
       </el-form-item>
       <el-form-item
         label="分类"
         prop="category">
         <el-select
           v-model="itemForm.category"
+          style="width:100%"
           placeholder="请选择">
           <el-option
-            label="菜品"
-            value="dish"/>
-          <el-option
-            label="饮品"
-            value="drink"/>
-          <el-option
-            label="烘焙"
-            value="bake"/>
-          <el-option
-            label="手工"
-            value="handwork"/>
+            v-for="item in categorys"
+            :key="item._id"
+            :label="item.categoryname"
+            :value="item.categoryname"/>
         </el-select>
+      </el-form-item>
+      <div
+        v-for="(ingredient,index) in itemForm.ingredients"
+        :key="'ingredient'+index">
+        <el-form-item
+          label="配料">
+          <el-form-item
+            :prop="'ingredients.'+index+'.name'"
+            :rules="ingredients.name"
+            label="名称"
+            class="float-left ingredient-text">
+            <el-input v-model="ingredient.name"/>
+          </el-form-item>
+          <el-form-item
+            :rules="ingredients.count"
+            :prop="'ingredients.'+index+'.count'"
+            label="用量"
+            class="float-left ingredient-text">
+            <el-input v-model="ingredient.count"/>
+          </el-form-item>
+          <el-button
+            class="float-right"
+            type="danger"
+            @click="removeIngredients(index)">删除配料</el-button>
+        </el-form-item>
+      </div>
+      <el-form-item>
+        <el-button
+          type="primary"
+          @click="addIngredients">添加配料</el-button>
       </el-form-item>
       <div
         v-for="(step,index) in itemForm.steps"
@@ -94,36 +144,7 @@
           type="primary"
           @click="addStep">添加步骤</el-button>
       </el-form-item>
-      <div
-        v-for="(ingredient,index) in itemForm.ingredients"
-        :key="'ingredient'+index">
-        <el-form-item
-          label="配料">
-          <el-form-item
-            :prop="'ingredients.'+index+'.name'"
-            :rules="ingredients.name"
-            label="名称"
-            class="float-left ingredient-text">
-            <el-input v-model="ingredient.name"/>
-          </el-form-item>
-          <el-form-item
-            :rules="ingredients.count"
-            :prop="'ingredients.'+index+'.count'"
-            label="用量"
-            class="float-left ingredient-text">
-            <el-input v-model="ingredient.count"/>
-          </el-form-item>
-          <el-button
-            class="float-right"
-            type="danger"
-            @click="removeIngredients(index)">删除配料</el-button>
-        </el-form-item>
-      </div>
-      <el-form-item>
-        <el-button
-          type="primary"
-          @click="addIngredients">添加配料</el-button>
-      </el-form-item>
+
       <el-form-item
         prop="tips"
         label="小贴士">
@@ -149,6 +170,21 @@
 .avatar-uploader {
   float: left;
 }
+.avatar-uploader-cover {
+  float: left;
+  width: 10;
+}
+.upload-demo .el-upload {
+  width: 100%;
+}
+.upload-demo .el-upload .el-upload-dragger {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
@@ -167,9 +203,23 @@
   line-height: 178px;
   text-align: center;
 }
+.avatar-uploader-icon-cover {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100%;
+  height: 250px;
+  line-height: 178px;
+  text-align: center;
+}
+
 .avatar {
   width: 178px;
   height: 178px;
+  display: block;
+}
+.avatar-cover {
+  width: 100%;
+  height: 100%;
   display: block;
 }
 .step-text {
@@ -185,6 +235,8 @@
 export default {
   data() {
     return {
+      labels: [],
+      categorys: [],
       fileList: [],
       itemForm: {
         filename: '',
@@ -198,6 +250,26 @@ export default {
             required: true,
             message: '请输入标题',
             tigger: 'change'
+          },
+          {
+            min: 1,
+            max: 100,
+            message: '长度在 1 到 200 个字符',
+            trigger: 'change'
+          }
+        ],
+        summary: [
+          {
+            type: 'string',
+            required: true,
+            message: '请输入简述',
+            tigger: 'change'
+          },
+          {
+            min: 1,
+            max: 200,
+            message: '长度在 1 到 200 个字符',
+            trigger: 'change'
           }
         ],
         category: [
@@ -206,6 +278,19 @@ export default {
             required: true,
             message: '请输入标题',
             tigger: 'change'
+          }
+        ],
+        label: [
+          {
+            validator: (rule, value, callback) => {
+              if (value == '') {
+                callback(new Error('请选择标签'))
+              } else if (value.length >= 5) {
+                callback(new Error('最多可以选择5个标签'))
+              } else {
+                callback()
+              }
+            }
           }
         ],
         tips: [
@@ -257,6 +342,29 @@ export default {
         ]
       }
     }
+  },
+  async mounted() {
+    const self = this
+    this.$axios.get('/categorys/getCategoryList', self.itemForm).then(resp => {
+      if (resp.status === 200) {
+        if (resp.data && resp.data.code === 0) {
+          self.categorys = resp.data.data
+        } else {
+        }
+      } else {
+        this.$message.error('服务器内部错误，错误码：' + resp.status)
+      }
+    })
+    this.$axios.get('/labels/getlabelList', self.itemForm).then(resp => {
+      if (resp.status === 200) {
+        if (resp.data && resp.data.code === 0) {
+          self.labels = resp.data.data
+        } else {
+        }
+      } else {
+        this.$message.error('服务器内部错误，错误码：' + resp.status)
+      }
+    })
   },
   methods: {
     onFileSuccess: function(res, file, index) {

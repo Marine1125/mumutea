@@ -23,7 +23,7 @@
         <el-button
           type="primary"
           @click="login('loginForm')">登录</el-button>
-        <el-button><router-link to="/signup">注册</router-link></el-button>
+        <el-button><router-link to="/users/signup">注册</router-link></el-button>
       </el-form-item>
     </el-form>
   </div>

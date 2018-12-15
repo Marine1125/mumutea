@@ -1,6 +1,10 @@
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
-const ItemSchema = new Schema({
+const HotItemSchema = new Schema({
+  itemid: {
+    type: String,
+    required: true
+  },
   title: {
     type: String,
     required: true
@@ -17,14 +21,6 @@ const ItemSchema = new Schema({
     type: String,
     required: true
   },
-  tips: {
-    type: String,
-    required: true
-  },
-  steps: {
-    type: Array,
-    required: true
-  },
   ingredients: {
     type: Array,
     required: true
@@ -38,9 +34,9 @@ const ItemSchema = new Schema({
     required: true
   },
   label: {
-    type: Array,
+    type: String,
     required: true
   }
 })
 
-export default mongoose.model('Item', ItemSchema)
+export default mongoose.model('HotItem', HotItemSchema)
