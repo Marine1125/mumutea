@@ -16,39 +16,41 @@ const store = () =>
         const {
           status,
           data: { code: code1, data: data1 }
-        } = await app.$axios.get('/items/getItems', {
-          params: { category: 'dish' }
+        } = await app.$axios.get('/hots/getHots', {
+          params: { category: '美食' }
         })
         commit('index/setDishItem', status === 200 ? data1 : [])
 
         const {
           status: status2,
           data: { data: data2 }
-        } = await app.$axios.get('/items/getItems', {
-          params: { category: 'drink' }
+        } = await app.$axios.get('/hots/getHots', {
+          params: { category: '饮品' }
         })
         commit('index/setDrinkItem', status2 === 200 ? data2 : [])
 
         const {
           status: status3,
           data: { data: data3 }
-        } = await app.$axios.get('/items/getItems', {
-          params: { category: 'bake' }
+        } = await app.$axios.get('/hots/getHots', {
+          params: { category: '烘焙' }
         })
         commit('index/setBakeItem', status3 === 200 ? data3 : [])
 
         const {
           status: status4,
           data: { data: data4 }
-        } = await app.$axios.get('/items/getItems', {
-          params: { category: 'handwork' }
+        } = await app.$axios.get('/hots/getHots', {
+          params: { category: '手工' }
         })
         commit('index/setHandworkItem', status4 === 200 ? data4 : [])
 
         const {
           status: status5,
           data: { data: data5 }
-        } = await app.$axios.get('/items/getHotItems')
+        } = await app.$axios.get('/hots/getHots')
+        console.log('data5')
+        console.log(data5)
         commit('item/setHotItem', status4 === 200 ? data5 : [])
       }
     }

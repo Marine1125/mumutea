@@ -9,21 +9,21 @@
       <el-row class="item-category">
         <el-button
           type="text"
-          @click="gouToMore('dish')">美食</el-button>
+          @click="gouToMore('美食')">美食</el-button>
       </el-row>
       <el-row class="item-category">
         <el-button
           type="text"
-          @click="gouToMore('drink')">饮品</el-button>
+          @click="gouToMore('饮品')">饮品</el-button>
       </el-row>
       <el-row class="item-category"><el-button
         type="text"
-        @click="gouToMore('bake')">烘焙</el-button>
+        @click="gouToMore('烘焙')">烘焙</el-button>
       </el-row>
       <el-row class="item-category">
         <el-button
           type="text"
-          @click="gouToMore('handwork')">手工</el-button>
+          @click="gouToMore('手工')">手工</el-button>
       </el-row>
     </el-col>
     <el-col

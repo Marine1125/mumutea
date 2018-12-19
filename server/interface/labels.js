@@ -1,7 +1,7 @@
 import Router from 'koa-router'
 import Axios from 'axios'
 import multer from 'koa-multer' //加载koa-multer模块
-import Labels from '../dbs/models/labels'
+import Label from '../dbs/models/labels'
 //文件上传
 
 let router = new Router({
@@ -11,7 +11,7 @@ let router = new Router({
 router.post('/addLabel', async (ctx, next) => {
   console.log(ctx)
   const { labelname, sort } = ctx.request.body
-  let newLabel = await Labels.create({
+  let newLabel = await Label.create({
     labelname,
     sort
   })
@@ -31,7 +31,7 @@ router.post('/addLabel', async (ctx, next) => {
 router.post('/deleteLabel', async (ctx, next) => {
   console.log(ctx)
   const _id = ctx.request.body._id
-  const result = await Labels.remove({
+  const result = await Label.remove({
     _id
   })
   if (result) {
@@ -52,7 +52,7 @@ router.post('/deactiveLabel', async (ctx, next) => {
   const { _id, labelname } = ctx.request.body
   const update = new Date()
   const active = 0
-  const result = await Labels.updateOne(
+  const result = await Label.updateOne(
     { _id },
     { $set: { labelname: labelname, update: update, active: active } }
   )
@@ -74,7 +74,7 @@ router.post('/activeLabel', async (ctx, next) => {
   const { _id, labelname } = ctx.request.body
   const update = new Date()
   const active = 1
-  const result = await Labels.updateOne(
+  const result = await Label.updateOne(
     { _id },
     { $set: { labelname: labelname, update: update, active: active } }
   )
@@ -92,7 +92,7 @@ router.post('/activeLabel', async (ctx, next) => {
 })
 
 router.get('/getLabelList', async (ctx, next) => {
-  let labelList = await Labels.find().sort({ sort: 1 })
+  let labelList = await Label.find().sort({ sort: 1 })
   if (labelList) {
     ctx.body = {
       code: 0,
@@ -109,7 +109,7 @@ router.get('/getLabelList', async (ctx, next) => {
 router.get('/getLabelById', async (ctx, next) => {
   console.log(ctx)
   const _id = ctx.query._id
-  let label = await Labels.findOne({
+  let label = await Label.findOne({
     _id
   })
   if (label) {

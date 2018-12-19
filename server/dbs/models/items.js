@@ -40,6 +40,22 @@ const ItemSchema = new Schema({
   label: {
     type: Array,
     required: true
+  },
+  ishot: {
+    type: String,
+    required: true,
+    default: '0'
+  },
+  praise: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  //审核状态：0：审核中，1：审核通过，-1：审核失败
+  status: {
+    type: String,
+    required: true,
+    default: 0
   }
 })
 

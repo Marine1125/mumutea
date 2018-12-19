@@ -11,6 +11,7 @@ import users from './interface/users'
 import items from './interface/items'
 import categorys from './interface/categorys'
 import labels from './interface/labels'
+import hots from './interface/hots'
 
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
@@ -60,6 +61,7 @@ async function start() {
   app.use(items.routes()).use(items.allowedMethods())
   app.use(categorys.routes()).use(categorys.allowedMethods())
   app.use(labels.routes()).use(labels.allowedMethods())
+  app.use(hots.routes()).use(hots.allowedMethods())
   app.use(ctx => {
     ctx.status = 200 // koa defaults to 404 when it sees that status is unset
 

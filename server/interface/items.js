@@ -117,6 +117,27 @@ router.get('/getItemsByTitle', async (ctx, next) => {
   }
 })
 
+router.get('/getItemsByCreator', async (ctx, next) => {
+  console.log(ctx.query.creator)
+  let creator = ''
+  if (ctx.query.creator) {
+    creator = decodeURIComponent(ctx.query.creator)
+  }
+  let items = await Item.find({ creator: creator }).limit(6)
+  if (items) {
+    ctx.body = {
+      code: 0,
+      data: items,
+      msg: ''
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      msg: 'create error'
+    }
+  }
+})
+
 router.get('/getItemDetail', async (ctx, next) => {
   console.log('123')
   let _id = ctx.query._id

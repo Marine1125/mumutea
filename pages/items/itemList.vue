@@ -3,47 +3,53 @@
     <el-row>
       <Search/>
     </el-row>
-    <el-row>
-      <el-tabs
-        v-model="category"
-        :stretch="true"
-        @tab-click="handleClick">
-        <el-tab-pane
-          label="全部"
-          name="all"
-          class="tab-style">
-          <Cards
-            :items="$store.state.item.itemList"
-            :category="category"/></el-tab-pane>
-        <el-tab-pane
-          label="美食"
-          name="dish"
-          class="tab-style">
-          <Cards
-            :items="$store.state.item.cookList"
-            :category="category"/></el-tab-pane>
-        <el-tab-pane
-          label="饮品"
-          name="drink"
-          class="tab-style">
-          <Cards
-            :items="$store.state.item.drinkList"
-            :category="category"/></el-tab-pane>
-        <el-tab-pane
-          label="烘焙"
-          name="bake"
-          class="tab-style">
-          <Cards
-            :items="$store.state.item.bakeList"
-            :category="category"/></el-tab-pane>
-        <el-tab-pane
-          label="手工"
-          name="handwork"
-          class="tab-style">
-          <Cards
-            :items="$store.state.item.handworkList"
-            :category="category"/></el-tab-pane>
-      </el-tabs>
+    <el-row :gutter="20">
+      <el-col :span="20">
+        <el-tabs
+          v-model="category"
+          :stretch="true"
+          @tab-click="handleClick">
+          <el-tab-pane
+            label="全部"
+            name="全部"
+            class="tab-style">
+            <Cards
+              :items="$store.state.item.itemList"
+              :category="category"/></el-tab-pane>
+          <el-tab-pane
+            label="美食"
+            name="美食"
+            class="tab-style">
+            <Cards
+              :items="$store.state.item.cookList"
+              :category="category"/></el-tab-pane>
+          <el-tab-pane
+            label="饮品"
+            name="饮品"
+            class="tab-style">
+            <Cards
+              :items="$store.state.item.drinkList"
+              :category="category"/></el-tab-pane>
+          <el-tab-pane
+            label="烘焙"
+            name="烘焙"
+            class="tab-style">
+            <Cards
+              :items="$store.state.item.bakeList"
+              :category="category"/></el-tab-pane>
+          <el-tab-pane
+            label="手工"
+            name="手工"
+            class="tab-style">
+            <Cards
+              :items="$store.state.item.handworkList"
+              :category="category"/></el-tab-pane>
+        </el-tabs>
+      </el-col>
+      <el-col :span="4">
+        热门
+        <hr>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -67,7 +73,7 @@ export default {
     return {
       category: this.$store.state.item.category
         ? this.$store.state.item.category
-        : 'all'
+        : '全部'
     }
   },
   mounted() {
@@ -83,7 +89,7 @@ export default {
         data: { code: code1, data: data1 }
       } = await this.$axios.get('/items/getItems', {
         params: {
-          category: 'dish',
+          category: '美食',
           title: window.encodeURIComponent(this.$store.state.item.keyword)
         }
       })
@@ -95,7 +101,7 @@ export default {
         data: { data: data2 }
       } = await this.$axios.get('/items/getItems', {
         params: {
-          category: 'drink',
+          category: '饮品',
           title: window.encodeURIComponent(this.$store.state.item.keyword)
         }
       })
@@ -106,7 +112,7 @@ export default {
         data: { data: data3 }
       } = await this.$axios.get('/items/getItems', {
         params: {
-          category: 'bake',
+          category: '烘焙',
           title: window.encodeURIComponent(this.$store.state.item.keyword)
         }
       })
@@ -117,7 +123,7 @@ export default {
         data: { data: data4 }
       } = await this.$axios.get('/items/getItems', {
         params: {
-          category: 'handwork',
+          category: '手工',
           title: window.encodeURIComponent(this.$store.state.item.keyword)
         }
       })
