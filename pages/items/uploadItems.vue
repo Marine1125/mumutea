@@ -165,7 +165,6 @@
 <style>
 .content {
   margin-top: 30px;
-  padding: 0 40% 0 15%;
 }
 .avatar-uploader {
   float: left;

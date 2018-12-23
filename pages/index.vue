@@ -19,7 +19,7 @@
     <el-row :gutter="20">
       <el-col
         v-for="(cookData,index) in $store.state.index.cookList"
-        :span="4"
+        :span="6"
         :key="'cook'+ index"
       >
         <el-card :body-style="{ padding: '0px' }">

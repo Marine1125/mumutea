@@ -56,10 +56,6 @@
   </div>
 </template>
 <style scoped>
-.content {
-  margin-top: 30px;
-  padding: 0 60% 0 15%;
-}
 </style>
 
 <script>

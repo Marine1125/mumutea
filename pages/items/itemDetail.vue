@@ -67,23 +67,31 @@
           <el-row class="center-content"><span>关注：111人</span><span>&nbsp;&nbsp;&nbsp;</span><span>粉丝：111人</span></el-row>
           <el-row class="center-content">
             <el-button
+              size="small"
               class="center-content"
               type="danger"
               @click="addFollow(itemDetail.creator)">关注</el-button>
+            <el-button
+              size="small"
+              class="center-content"
+              type="danger"
+              @click="addFollow(itemDetail.creator)">主页</el-button>
           </el-row>
         </div>
         其他作品<hr>
         <div class="side-content">
           <el-row
             v-for="item in creatorItems"
-            :key="item.id">
-            <el-col :span = "12">
+            :key="item.id"
+            :gutter="10">
+            <el-col :span = "10">
               <img
                 :src="item.filename"
                 alt="">
             </el-col>
-            <el-col :span="12">
+            <el-col :span="14">
               <el-row>{{ item.title }}</el-row>
+              <el-row>{{ item.create }}</el-row>
             </el-col>
           </el-row>
         </div>

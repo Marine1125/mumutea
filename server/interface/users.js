@@ -165,15 +165,17 @@ router.get('/exit', async (ctx, next) => {
 
 router.get('/getLoginUser', async (ctx, next) => {
   if (ctx.isAuthenticated()) {
-    const { username, email } = ctx.session.passport.user
+    const { username, email, _id } = ctx.session.passport.user
     ctx.body = {
       user: username,
-      email
+      email,
+      _id
     }
   } else {
     ctx.body = {
       user: '',
-      email: ''
+      email: '',
+      _id: ''
     }
   }
 })
@@ -200,6 +202,68 @@ router.get('/getUsers', async ctx => {
     }
   }
   console.log('user out')
+})
+
+router.get('/getUserById', async ctx => {
+  let _id = ctx.query._id
+  console.log(_id)
+  let where = {
+    _id
+  }
+  let result = await User.findOne(where)
+  console.log(result)
+  if (result) {
+    ctx.body = {
+      code: 0,
+      msg: '',
+      data: result
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '',
+      data: ''
+    }
+  }
+})
+
+router.post('/userUpdate', async ctx => {
+  console.log(ctx.request.body)
+  const {
+    _id,
+    photo,
+    province,
+    city,
+    birthday,
+    constellation,
+    sex,
+    introduce
+  } = ctx.request.body
+  const result = await User.updateOne(
+    { _id },
+    {
+      $set: {
+        photo,
+        province,
+        city,
+        birthday,
+        constellation,
+        sex,
+        introduce
+      }
+    }
+  )
+  if (result) {
+    ctx.body = {
+      code: 0,
+      data: result
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      msg: '更新失败'
+    }
+  }
 })
 
 export default router

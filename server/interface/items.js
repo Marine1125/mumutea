@@ -81,7 +81,6 @@ router.get('/getItems', async (ctx, next) => {
       $regex: title ? title : ''
     }
   })
-  console.log(items)
   if (items) {
     ctx.body = {
       code: 0,

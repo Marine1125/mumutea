@@ -49,8 +49,6 @@ const store = () =>
           status: status5,
           data: { data: data5 }
         } = await app.$axios.get('/hots/getHots')
-        console.log('data5')
-        console.log(data5)
         commit('item/setHotItem', status4 === 200 ? data5 : [])
       }
     }

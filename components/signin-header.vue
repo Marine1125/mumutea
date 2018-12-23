@@ -1,9 +1,10 @@
 <template>
   <div>
     <el-header class="header">
-      <div class="logolink">
+      <div class="logo-content">
         <a href="/">
           <img
+            class="logolink"
             src="~/static/logo2.png"
             alt="">
           <div class="logotext">木木家</div>
@@ -31,15 +32,17 @@ img {
   width: 117px;
   height: 40px;
 }
+.logo-content {
+  float: left;
+}
 .logolink {
   margin: 10px;
-  width: 170px;
+  width: 40px;
   height: 40px;
-  float: left;
 }
 .logotext {
   margin: 10px 0;
-  font-size: 15px;
+  font-size: 30px;
   color: black;
   float: right;
 }

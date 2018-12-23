@@ -1,12 +1,13 @@
 <template>
   <div>
     <el-header class="header">
-      <div class="logolink">
+      <div class="logo-content">
         <a href="/">
           <img
+            class="logolink"
             src="~/static/logo2.png"
             alt="">
-          <div class="logotext">木木家</div>
+          <div class="logotext">木木<span class="color-red">家</span></div>
         </a>
       </div>
       <div
@@ -23,7 +24,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item><a href="/items/uploadItems">添加Item</a></el-dropdown-item>
-            <el-dropdown-item><a href="/users/usercenter">用户中心</a></el-dropdown-item>
+            <el-dropdown-item><a :href="'/users/userCenter?_id='+id">用户中心</a></el-dropdown-item>
             <el-dropdown-item divided><a href="/backup/categoryList">分类管理</a></el-dropdown-item>
             <el-dropdown-item><a href="/backup/LabelList">标签管理</a></el-dropdown-item>
             <el-dropdown-item><a href="/backup/itemTable">热门管理</a></el-dropdown-item>
@@ -51,6 +52,7 @@
   padding: 0 15%;
   background-color: #f1f1f1;
 }
+
 .header-right a {
   margin: 20px;
 }
@@ -64,15 +66,17 @@ img {
   width: 117px;
   height: 40px;
 }
+.logo-content {
+  float: left;
+}
 .logolink {
   margin: 10px;
-  width: 170px;
+  width: 40px;
   height: 40px;
-  float: left;
 }
 .logotext {
   margin: 10px 0;
-  font-size: 15px;
+  font-size: 30px;
   color: black;
   float: right;
 }
@@ -86,7 +90,9 @@ img {
 export default {
   data() {
     return {
-      username: ''
+      username: '',
+      id: '',
+      email: ''
     }
   },
   async mounted() {
@@ -95,6 +101,8 @@ export default {
       if (resp.status === 200) {
         if (resp.data && resp.data.user) {
           this.username = resp.data.user
+          this.id = resp.data._id
+          this.email = resp.data.email
         } else {
           this.username = ''
         }

@@ -45,7 +45,6 @@ router.post('/deleteHot', async (ctx, next) => {
 })
 
 router.get('/getHots', async (ctx, next) => {
-  console.log('category' + ctx.query.category)
   let limit = ctx.query.limit ? ctx.query.limit : 6
   let category = ctx.query.category
     ? decodeURIComponent(ctx.query.category)
@@ -56,7 +55,6 @@ router.get('/getHots', async (ctx, next) => {
       $regex: category ? category : ''
     }
   }).limit(limit)
-  console.log(hots)
   if (hots) {
     ctx.body = {
       code: 0,

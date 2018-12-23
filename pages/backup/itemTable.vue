@@ -46,10 +46,6 @@
   </div>
 </template>
 <style scoped>
-.content {
-  margin-top: 30px;
-  padding: 0 20% 0 20%;
-}
 </style>
 <script>
 export default {

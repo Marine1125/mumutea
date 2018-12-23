@@ -31,6 +31,15 @@ const UserSchema = new Schema({
   },
   sex: {
     type: String
+  },
+  province: {
+    type: String
+  },
+  city: {
+    type: String
+  },
+  constellation: {
+    type: String
   }
 })
 

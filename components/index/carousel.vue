@@ -64,13 +64,7 @@
   color: white;
 }
 .rainbow {
-  height: 450px;
-  border-radius: 4px;
-  background: -webkit-linear-gradient(
-    -90deg,
-    rgba(2, 181, 157, 0.85) 2%,
-    rgba(22, 146, 183, 0.85) 100%
-  );
+  background-color: #ce4114;
 }
 </style>
 <script>
