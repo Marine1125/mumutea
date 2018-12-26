@@ -22,7 +22,7 @@
           :on-success="filenameUploadSuccess"
           :show-file-list="false"
           class="avatar-uploader"
-          action="/items/upload">
+          action="/utils/uploadFiles">
           <img
             v-if="updateForm.photo"
             :src="updateForm.photo"

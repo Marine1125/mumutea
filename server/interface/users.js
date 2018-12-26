@@ -2,6 +2,7 @@ import Router from 'koa-router'
 import Redis from 'koa-redis'
 import nodeMailer from 'nodemailer'
 import User from '../dbs/models/users'
+import Fans from '../dbs/models/fans'
 import Passport from '../utils/passport'
 import Email from '../dbs/config'
 import Axios from 'axios'
@@ -206,12 +207,20 @@ router.get('/getUsers', async ctx => {
 
 router.get('/getUserById', async ctx => {
   let _id = ctx.query._id
-  console.log(_id)
+
   let where = {
     _id
   }
+  let fans = await Fans.countDocuments({
+    userid: _id
+  })
+  let follows = await Fans.countDocuments({
+    fansid: _id
+  })
   let result = await User.findOne(where)
-  console.log(result)
+  result = result.toJSON()
+  result.fans = fans
+  result.follows = follows
   if (result) {
     ctx.body = {
       code: 0,

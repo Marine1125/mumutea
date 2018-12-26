@@ -30,10 +30,6 @@
             <span>{{ cookData.title }}</span>
             <div class="bottom clearfix">
               <time class="time">{{ cookData.create }}</time>
-              <el-button
-                type="text"
-                class="button"
-                @click="getDetails(cookData._id)">详细信息</el-button>
             </div>
           </div>
         </el-card>
@@ -53,7 +49,7 @@
     <el-row :gutter="20">
       <el-col
         v-for="(drinkData,index) in $store.state.index.drinkList"
-        :span="4"
+        :span="6"
         :key="'drink'+ index"
       >
         <el-card :body-style="{ padding: '0px' }">
@@ -64,10 +60,6 @@
             <span>{{ drinkData.title }}</span>
             <div class="bottom clearfix">
               <time class="time">{{ drinkData.create }}</time>
-              <el-button
-                type="text"
-                class="button"
-                @click="getDetails(drinkData._id)">详细信息</el-button>
             </div>
           </div>
         </el-card>
@@ -87,7 +79,7 @@
     <el-row :gutter="20">
       <el-col
         v-for="(bakeData,index) in $store.state.index.bakeList"
-        :span="4"
+        :span="6"
         :key="'bake'+ index"
       >
         <el-card :body-style="{ padding: '0px' }">
@@ -98,10 +90,6 @@
             <span>{{ bakeData.title }}</span>
             <div class="bottom clearfix">
               <time class="time">{{ bakeData.create }}</time>
-              <el-button
-                type="text"
-                class="button"
-                @click="getDetails(bakeData._id)">详细信息</el-button>
             </div>
           </div>
         </el-card>
@@ -131,10 +119,6 @@
             <span>{{ handworkData.title }}</span>
             <div class="bottom clearfix">
               <time class="time">{{ handworkData.create }}</time>
-              <el-button
-                type="text"
-                class="button"
-                @click="getDetails(handworkData._id)">详细信息</el-button>
             </div>
           </div>
         </el-card>

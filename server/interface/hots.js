@@ -45,7 +45,7 @@ router.post('/deleteHot', async (ctx, next) => {
 })
 
 router.get('/getHots', async (ctx, next) => {
-  let limit = ctx.query.limit ? ctx.query.limit : 6
+  let limit = ctx.query.limit ? ctx.query.limit : 4
   let category = ctx.query.category
     ? decodeURIComponent(ctx.query.category)
     : ''

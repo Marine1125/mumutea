@@ -2,39 +2,15 @@ import Router from 'koa-router'
 import Axios from 'axios'
 import multer from 'koa-multer' //加载koa-multer模块
 import Item from '../dbs/models/items'
+import Collection from '../dbs/models/collections'
 //文件上传
 
 let router = new Router({
   prefix: '/items'
 })
 
-//配置
-var storage = multer.diskStorage({
-  //文件保存路径
-  destination: function(req, file, cb) {
-    console.log('----' + file + '-----')
-    cb(null, 'static/uploads/')
-  },
-  //修改文件名称
-  filename: function(req, file, cb) {
-    var fileFormat = file.originalname.split('.')
-    cb(null, Date.now() + '.' + fileFormat[fileFormat.length - 1])
-  }
-})
-//加载配置
-var upload = multer({ storage: storage })
-//路由
-router.post('/upload', upload.single('file'), async (ctx, next) => {
-  let filePath = ctx.req.file.path
-  filePath = filePath.replace('static\\', '')
-  filePath = filePath.replace('static/', '')
-  ctx.body = {
-    file: filePath //返回文件路径
-  }
-})
-
 router.post('/addItem', async (ctx, next) => {
-  const creator = ctx.session.passport.user.username
+  const creator = ctx.session.passport.user._id
   console.log('123')
   const {
     title,
@@ -65,6 +41,47 @@ router.post('/addItem', async (ctx, next) => {
   } else {
     ctx.body = {
       code: -1,
+      msg: 'create error'
+    }
+  }
+})
+
+router.post('/updateItem', async (ctx, next) => {
+  console.log('123')
+  const {
+    _id,
+    title,
+    category,
+    tips,
+    steps,
+    ingredients,
+    filename,
+    summary,
+    label
+  } = ctx.request.body
+  let result = await Item.updateOne(
+    { _id },
+    {
+      title,
+      category,
+      tips,
+      steps,
+      ingredients,
+      filename,
+      summary,
+      label
+    }
+  )
+  if (result) {
+    ctx.body = {
+      code: 0,
+      data: _id,
+      msg: ''
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      data: '',
       msg: 'create error'
     }
   }
@@ -117,12 +134,19 @@ router.get('/getItemsByTitle', async (ctx, next) => {
 })
 
 router.get('/getItemsByCreator', async (ctx, next) => {
-  console.log(ctx.query.creator)
-  let creator = ''
-  if (ctx.query.creator) {
-    creator = decodeURIComponent(ctx.query.creator)
+  const offset = parseInt(ctx.query.offset)
+  const limit = parseInt(ctx.query.limit)
+  let items = await Item.find({ creator: ctx.query.creator })
+    .limit(limit)
+    .skip(offset)
+    .lean()
+  for (let i = 0; i < items.length; i++) {
+    let itemid = items[i]._id
+    items[i].collectioncount = await Collection.countDocuments({
+      itemid
+    })
   }
-  let items = await Item.find({ creator: creator }).limit(6)
+  console.log(items)
   if (items) {
     ctx.body = {
       code: 0,
@@ -153,25 +177,6 @@ router.get('/getItemDetail', async (ctx, next) => {
     ctx.body = {
       code: -1,
       msg: 'data not exist'
-    }
-  }
-})
-
-router.get('/getHotItems', async (ctx, next) => {
-  let items = await Item.find({
-    category: { $regex: ctx.query.category ? ctx.query.category : '' },
-    title: { $regex: ctx.query.keyword ? ctx.query.keyword : '' }
-  }).limit(4)
-  if (items) {
-    ctx.body = {
-      code: 0,
-      data: items,
-      msg: ''
-    }
-  } else {
-    ctx.body = {
-      code: -1,
-      msg: 'create error'
     }
   }
 })

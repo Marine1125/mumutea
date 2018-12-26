@@ -1,34 +1,40 @@
 <template>
-  <div >
+  <el-row :gutter="20">
     <el-col
       :span="4"
       style=""
       class="rainbow">
-      <el-row class="item-category">木木家</el-row>
+      <el-row class="item-category">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;木木家</el-row>
       <hr>
       <el-row class="item-category">
+        <img
+          class="img-content"
+          src="~/assets/images/dish.png"
+          alt="">
         <el-button
           type="text"
           @click="gouToMore('美食')">美食</el-button>
       </el-row>
       <el-row class="item-category">
+        <img
+          class="img-content"
+          src="~/assets/images/drink.png"
+          alt="">
         <el-button
           type="text"
-          @click="gouToMore('饮品')">饮品</el-button>
-      </el-row>
-      <el-row class="item-category"><el-button
-        type="text"
-        @click="gouToMore('烘焙')">烘焙</el-button>
+          @click="gouToMore('饮品')"><span>饮品</span></el-button>
       </el-row>
       <el-row class="item-category">
+        <img
+          class="img-content"
+          src="~/assets/images/bake.png"
+          alt="">
         <el-button
           type="text"
-          @click="gouToMore('手工')">手工</el-button>
+          @click="gouToMore('烘焙')">烘焙</el-button>
       </el-row>
     </el-col>
-    <el-col
-      :span="19"
-      :offset="1">
+    <el-col :span="20">
       <el-carousel height="450px">
         <el-carousel-item
           v-for="item in $store.state.item.hotItemList"
@@ -42,12 +48,22 @@
         </el-carousel-item>
       </el-carousel>
     </el-col>
-  </div>
+  </el-row>
 </template>
 <style scoped>
+.img-content {
+  width: 90px;
+  height: 90px;
+}
 .item-category {
+  height: 22%;
+  text-align: center;
+  font-size: 30px;
   padding: 13px;
-  height: 15%;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  color: #e2c5a7;
 }
 .el-carousel__item img {
   width: 100%;
@@ -61,9 +77,12 @@
   color: white;
 }
 .item-category .el-button {
-  color: white;
+  margin-left: 10px;
+  color: #e2c5a7;
+  font-size: 25px;
 }
 .rainbow {
+  height: 450px;
   background-color: #ce4114;
 }
 </style>

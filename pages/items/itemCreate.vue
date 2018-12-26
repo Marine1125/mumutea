@@ -21,7 +21,7 @@
           :show-file-list="false"
           drag
           class="upload-demo"
-          action="/items/upload">
+          action="/utils/uploadFiles">
           <img
             v-if="itemForm.filename"
             :src="itemForm.filename"
@@ -114,7 +114,7 @@
               :show-file-list="false"
               :on-success="(res,file)=>{return onFileSuccess(res,file,index)}"
               class="avatar-uploader"
-              action="/items/upload">
+              action="/utils/uploadFiles">
               <img
                 v-if="step.stepImg"
                 :src="step.stepImg"
@@ -156,8 +156,12 @@
       <el-form-item>
         <el-button
           type="primary"
-          @click="createItem('itemForm')">提交</el-button>
-        <el-button @click="resetForm('itemForm')">重置</el-button>
+          @click="createItem('itemForm')">发布</el-button>
+        <el-button @click="createDraft($route.query._id)">保存草稿</el-button>
+        <el-button
+          v-if="$route.query._id"
+          @click="deleteDraft($route.query._id)">删除草稿</el-button>
+        <el-button @click="cancel">返回</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -364,6 +368,25 @@ export default {
         this.$message.error('服务器内部错误，错误码：' + resp.status)
       }
     })
+    if (this.$route.query._id) {
+      const _id = this.$route.query._id
+      this.$axios
+        .get('/drafts/getDraftById', {
+          params: {
+            _id
+          }
+        })
+        .then(resp => {
+          if (resp.status === 200) {
+            if (resp.data && resp.data.code === 0) {
+              self.itemForm = resp.data.data
+            } else {
+            }
+          } else {
+            this.$message.error('服务器内部错误，错误码：' + resp.status)
+          }
+        })
+    }
   },
   methods: {
     onFileSuccess: function(res, file, index) {
@@ -436,6 +459,65 @@ export default {
           this.itemForm.ingredients.splice(index, 1)
         })
         .catch(_ => {})
+    },
+    createDraft: function() {
+      self = this
+      if (self.itemForm._id) {
+        self.$axios.post('/drafts/upDateDraft', self.itemForm).then(resp => {
+          if (resp.status === 200) {
+            if (resp.data && resp.data.code === 0) {
+              self.$message({
+                message: '创建成功',
+                type: 'success'
+              })
+              self.$router.go(-1)
+            } else {
+              this.$message.error(resp.data.msg)
+            }
+          } else {
+            this.$message.error('服务器内部错误，错误码：' + resp.status)
+          }
+        })
+      } else {
+        self.$axios.post('/drafts/addDraft', self.itemForm).then(resp => {
+          if (resp.status === 200) {
+            if (resp.data && resp.data.code === 0) {
+              self.$message({
+                message: '创建成功',
+                type: 'success'
+              })
+              self.$router.go(-1)
+            } else {
+              this.$message.error(resp.data.msg)
+            }
+          } else {
+            this.$message.error('服务器内部错误，错误码：' + resp.status)
+          }
+        })
+      }
+
+      console.log(this.itemForm)
+    },
+    deleteDraft: function(draftid) {
+      const self = this
+      self.$axios.post('/drafts/deleteDraft', { _id: draftid }).then(resp => {
+        if (resp.status === 200) {
+          if (resp.data && resp.data.code === 0) {
+            self.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+            self.$router.go(-1)
+          } else {
+            self.$message.error(resp.data.msg)
+          }
+        } else {
+          self.$message.error('服务器内部错误，错误码：' + resp.status)
+        }
+      })
+    },
+    cancel: function() {
+      this.$router.go(-1)
     }
   }
 }

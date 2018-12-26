@@ -3,6 +3,7 @@
     <el-row
       v-for="item in items"
       :key="item._id"
+      :gutter="20"
       class="card"
       @click="toDetail(item._id)">
       <a
@@ -13,8 +14,7 @@
             alt="">
         </el-col>
         <el-col
-          :span="6"
-          offset="1">
+          :span="6">
           <el-row><h1>{{ item.title }}</h1>
             <el-tag
               v-for="item in item.label"

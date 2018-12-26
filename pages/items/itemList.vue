@@ -8,6 +8,7 @@
         <el-tabs
           v-model="category"
           :stretch="true"
+          type="card"
           @tab-click="handleClick">
           <el-tab-pane
             label="全部"

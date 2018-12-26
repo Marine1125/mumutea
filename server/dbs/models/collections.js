@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
-const FansSchema = new Schema({
+const CollectionSchema = new Schema({
   userid: {
     type: String,
     required: true
   },
-  fansid: {
+  itemid: {
     type: String,
     required: true
   },
@@ -15,4 +15,4 @@ const FansSchema = new Schema({
   }
 })
 
-export default mongoose.model('Fans', FansSchema)
+export default mongoose.model('Collection', CollectionSchema)

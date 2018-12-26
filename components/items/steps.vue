@@ -2,13 +2,13 @@
   <div class="">
     <el-row
       v-for="(step,index) in steps"
+      :gutter="20"
       :key="'step'+index">
-      <el-col :span="6"><img
+      <el-col :span="8"><img
         :src="step.stepImg"
         alt=""></el-col>
       <el-col
-        :span="17"
-        offset="1"><div>{{ step.stepText }}</div></el-col>
+        :span="16"><div >{{ step.stepText }}</div></el-col>
     </el-row>
   </div>
 </template>

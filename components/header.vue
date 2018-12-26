@@ -19,11 +19,10 @@
         <el-dropdown
           trigger="click"
           class="floatright">
-          <span class="el-dropdown-link">
+          <span class="el-dropdown-link color-red">
             你好！{{ username }}<i class="el-icon-arrow-down el-icon--right"/>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item><a href="/items/uploadItems">添加Item</a></el-dropdown-item>
             <el-dropdown-item><a :href="'/users/userCenter?_id='+id">用户中心</a></el-dropdown-item>
             <el-dropdown-item divided><a href="/backup/categoryList">分类管理</a></el-dropdown-item>
             <el-dropdown-item><a href="/backup/LabelList">标签管理</a></el-dropdown-item>

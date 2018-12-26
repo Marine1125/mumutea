@@ -14,6 +14,7 @@
       v-for="item in $store.state.item.hotItemList"
       :key="item._id"
       type="text"
+      class="color-red"
       @click="goToList(item.title)">{{ item.title }}</el-button>
   </div>
 </template>
@@ -24,6 +25,12 @@
 }
 .serach-input a {
   margin: 0 10px 0 0;
+}
+.el-button--text {
+  color: #ce4114;
+  background: 0 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 </style>
 <script>

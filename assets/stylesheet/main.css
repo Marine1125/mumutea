@@ -5,7 +5,7 @@ body {
 .content{
   min-height: 1200px;
   margin-top: 30px;
-  width: 1400px;
+  width: 1300px;
   margin: 0 auto !important;
 }
 .float-left{
@@ -17,9 +17,35 @@ body {
 .color-red {
   color: #ce4114;
 }
+.color-yellow{
+  color:#F79A29;
+}
 a{
-  color: #ce4114;
+  color: #ce4114 !important;
 }
 a:focus, a:hover {
+  color: #F79A29 !important;
+}
+
+.el-tabs__item:hover {
+  color: #ce4114 !important;
+  cursor: pointer;
+}
+.el-tabs__item.is-active {
+  color: white !important;
+  background-color: #ce4114;
+}
+.el-card {
+  margin-bottom: 20px;
+}
+.el-card img {
+  transition: All 0.4s ease-in-out;
+}
+.el-card img:hover {
+  transform: scale(1.1);
+}
+.button {
+  border-color: #ce4114 !important;
   color: #ce4114;
+  background-color: white;
 }

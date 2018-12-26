@@ -59,26 +59,36 @@
         <div class="side-content">
           <el-row class="center-content">
             <img
+              :src="userInfo.photo"
               class="photo"
-              src="~/assets/images/no-photo.jpg"
-              alt="">
+              alt="~/assets/images/no-photo.jpg">
           </el-row>
-          <el-row class="center-content">{{ itemDetail.creator }}</el-row>
-          <el-row class="center-content"><span>关注：111人</span><span>&nbsp;&nbsp;&nbsp;</span><span>粉丝：111人</span></el-row>
+          <el-row class="center-content">{{ userInfo.username }}</el-row>
+          <el-row class="center-content"><span>关注：{{ userInfo.follows }}人</span><span>&nbsp;&nbsp;&nbsp;</span><span>粉丝：{{ userInfo.fans }}人</span></el-row>
           <el-row class="center-content">
             <el-button
+              v-if="!isFollow"
+              round
               size="small"
               class="center-content"
               type="danger"
-              @click="addFollow(itemDetail.creator)">关注</el-button>
+              @click="addFollow(userInfo._id)">关注</el-button>
             <el-button
+              v-else
+              round
               size="small"
               class="center-content"
               type="danger"
-              @click="addFollow(itemDetail.creator)">主页</el-button>
+              @click="deleteFollow(userInfo._id)">取消关注</el-button>
+            <el-button
+              round
+              size="small"
+              class="center-content"
+              type="danger"
+              @click="toMainPage(userInfo._id)">主页</el-button>
           </el-row>
         </div>
-        其他作品<hr>
+        {{ userInfo.username }}的其他作品<hr>
         <div class="side-content">
           <el-row
             v-for="item in creatorItems"
@@ -163,6 +173,8 @@ export default {
     let itemDetail = ''
     let creatorItems = []
     let breadcrumbs = []
+    let userInfo = ''
+    let isFollow = false
     await ctx.$axios
       .get('/items/getItemDetail', {
         params: {
@@ -190,9 +202,47 @@ export default {
         }
       })
     await ctx.$axios
+      .get('/users/getUserById', {
+        params: {
+          _id: creator
+        }
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          if (resp.data && resp.data.code === 0) {
+            userInfo = resp.data.data
+          } else {
+            ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
+          }
+        } else {
+          ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
+        }
+      })
+    await ctx.$axios
+      .get('/fans/isFollow', {
+        params: {
+          userid: userInfo._id
+        }
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          if (resp.data && resp.data.code === 0) {
+            if (resp.data.data) {
+              isFollow = true
+            }
+          } else {
+            //ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
+          }
+        } else {
+          //ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
+        }
+      })
+    await ctx.$axios
       .get('/items/getItemsByCreator', {
         params: {
-          creator: creator
+          creator: creator,
+          offset: 0,
+          limit: 5
         }
       })
       .then(resp => {
@@ -206,19 +256,74 @@ export default {
           ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
         }
       })
-    return { itemDetail, breadcrumbs, creatorItems, rate: 4.7 }
+    return {
+      itemDetail,
+      breadcrumbs,
+      creatorItems,
+      userInfo,
+      isFollow,
+      rate: 4.7
+    }
   },
   methods: {
-    addCollection: function(id) {
-      this.$message({
-        message: '成功收藏' + id,
-        type: 'success'
+    addCollection: function(itemid) {
+      const self = this
+      self.$axios.post('/collections/addCollection', { itemid }).then(resp => {
+        if (resp.status === 200) {
+          if (resp.data && resp.data.code === 0) {
+            self.$message({
+              message: '成功收藏',
+              type: 'success'
+            })
+            self.isFollow = true
+          } else {
+            self.$message.error(resp.data.msg)
+          }
+        } else {
+          self.$message.error('服务器内部错误，错误码：' + resp.status)
+        }
       })
     },
-    addFollow: function(creator) {
-      this.$message({
-        message: '关注成功' + creator,
-        type: 'success'
+    addFollow: function(userid) {
+      const self = this
+      self.$axios.post('/fans/addFollow', { userid }).then(resp => {
+        if (resp.status === 200) {
+          if (resp.data && resp.data.code === 0) {
+            self.$message({
+              message: '关注成功',
+              type: 'success'
+            })
+            self.isFollow = true
+          } else {
+            self.$message.error(resp.data.msg)
+          }
+        } else {
+          self.$message.error('服务器内部错误，错误码：' + resp.status)
+        }
+      })
+    },
+    deleteFollow: function(userid) {
+      const self = this
+      self.$axios.post('/fans/deleteFollow', { userid }).then(resp => {
+        if (resp.status === 200) {
+          if (resp.data && resp.data.code === 0) {
+            self.$message({
+              message: '取消关注成功',
+              type: 'success'
+            })
+            self.isFollow = false
+          } else {
+            self.$message.error(resp.data.msg)
+          }
+        } else {
+          self.$message.error('服务器内部错误，错误码：' + resp.status)
+        }
+      })
+    },
+    toMainPage: function(userid) {
+      this.$router.push({
+        path: '/users/mainpage',
+        query: { _id: userid }
       })
     }
   }

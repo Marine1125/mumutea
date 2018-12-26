@@ -19,10 +19,6 @@
         class="center-content">
         <el-row>
           <h1 class="page-title float-left">{{ userInfo.username }}</h1>
-          <span>&nbsp;&nbsp;&nbsp;</span>
-          <a
-            :href="'/users/userUpdate?_id='+ userInfo._id"
-            style="line-height: 3">编辑资料</a>
         </el-row>
         <el-row class="center-content">
           <span>性别：</span><span v-if="userInfo.sex">{{ userInfo.sex }}</span><span v-else>暂无</span>
@@ -37,6 +33,18 @@
           <span>&nbsp;&nbsp;&nbsp;</span>
           <span>粉丝：{{ userInfo.fans }}人</span>
           <span>&nbsp;&nbsp;&nbsp;</span>
+          <el-button
+            v-if="isFollow"
+            round
+            class="button"
+            size="small"
+            @click="deleteFollow(userInfo._id)">取消关注</el-button>
+          <el-button
+            v-else
+            round
+            size="small"
+            class="button"
+            @click="addFollow(userInfo._id)">关注</el-button>
         </el-row>
         <el-row class="center-content">
           <p>{{ userInfo.introduce }}</p>
@@ -49,7 +57,7 @@
         type="card"
         @tab-click="handleClick">
         <el-tab-pane
-          label="我的厨房"
+          :label="userInfo.username + '的厨房'"
           name="厨房">
           <el-row :gutter="20">
             <el-col
@@ -69,41 +77,11 @@
                     <span>100</span>
                     <span>&nbsp;&nbsp;&nbsp;</span>
                     <i class="mumuteaiconfont">&#xe67b;</i>
-                    <span>{{ cookData.collectioncount }}</span>
-                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <el-button
-                      round
-                      size="small"
-                      class="button"
-                      icon="el-icon-edit"
-                      @click="toEdit(cookData._id)">编辑</el-button>
+                    <span>100</span>
                   </div>
                 </div>
-
               </el-card>
-            </el-col>
-            <el-col
-              :span="6"
-              style="margin-bottom:10px">
-              <el-card
-                :body-style="{ padding: '0px' }"
-                class="upload-content">
-                <a href="/items/itemCreate">
-                  <div class="image">
-                    <img
-                      class="image-add"
-                      src="~/assets/images/add.jpg"
-                      alt="">
-                  </div>
-                  <div style="padding: 14px;" >
-                    <div class="bottom clearfix">
-                      <span class="add-text">创建美食</span>
-                    </div>
-                  </div>
-                </a>
-              </el-card>
-            </el-col>
-          </el-row>
+          </el-col></el-row>
           <el-row>
             <button
               round
@@ -112,14 +90,13 @@
           </el-row>
         </el-tab-pane>
         <el-tab-pane
-          label="我的粉丝"
+          :label="userInfo.username + '的粉丝'"
           name="粉丝">
           <el-row :gutter="20">
             <el-col
               v-for="(fans,index) in myFans"
               :span="6"
-              :key="index"
-              class="person-card">
+              :key="index">
               <el-row :gutter="30">
                 <a :href="'/users/mainPage?_id='+ fans._id">
                   <el-col :span="8">
@@ -149,7 +126,7 @@
           </el-row>
         </el-tab-pane>
         <el-tab-pane
-          label="我的关注"
+          :label="userInfo.username + '的关注'"
           name="关注">
           <el-row :gutter="20">
             <el-col
@@ -185,7 +162,7 @@
           </el-row>
         </el-tab-pane>
         <el-tab-pane
-          label="我的收藏"
+          :label="userInfo.username + '的收藏'"
           name="收藏">
           <el-row :gutter="20">
             <el-col
@@ -205,67 +182,9 @@
                     <span>100</span>
                     <span>&nbsp;&nbsp;&nbsp;</span>
                     <i class="mumuteaiconfont">&#xe67b;</i>
-                    <span>{{ collection.collectioncount }}</span>
-                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <el-button
-                      round
-                      size="small"
-                      class="button"
-                      icon="el-icon-delete"
-                      @click="deleteCollection(collection._id)">取消收藏</el-button>
+                    <span>100</span>
                   </div>
                 </div>
-
-              </el-card>
-            </el-col>
-          </el-row>
-          <el-row>
-            <button
-              round
-              class="button page-button"
-              @click="getMoreCollections">获取更多内容<i class="el-icon-arrow-down"/></button>
-          </el-row>
-        </el-tab-pane>
-        <el-tab-pane
-          label="我的草稿"
-          name="草稿">
-          <el-row :gutter="20">
-            <el-col
-              v-for="(draft,index) in myDrafts"
-              :span="6"
-              :key="'cook'+ index">
-              <el-card :body-style="{ padding: '0px' }">
-                <a :href="'/items/itemCreate?_id=' +draft._id">
-                  <img
-                    v-if="draft.filename"
-                    :src="draft.filename"
-                    class="image"
-                    alt="~/asset/images/np-imgae.png">
-                  <img
-                    v-else
-                    class="image"
-                    src="~/assets/images/no-image.png">
-                </a>
-                <div style="padding: 14px;">
-                  <span class="card-title">{{ draft.title?draft.title:'未命名' }}</span>
-                  <div class="bottom clearfix">
-                    <el-button
-                      round
-                      size="small"
-                      class="button"
-                      icon="el-icon-edit"
-                      @click="editDraft(draft._id)">
-                      编辑</el-button>
-                    <el-button
-                      round
-                      size="small"
-                      class="button"
-                      icon="el-icon-delete"
-                      @click="deleteDraft(draft._id)">
-                      删除</el-button>
-                  </div>
-                </div>
-
               </el-card>
             </el-col>
           </el-row>
@@ -281,18 +200,15 @@
   </div>
 </template>
 <style scope>
-.person-card {
-  margin-bottom: 10px;
+.fans-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
 }
 .button {
   border-color: #ce4114 !important;
   color: #ce4114;
   background-color: white;
-}
-.fans-photo {
-  width: 100px;
-  height: 100px;
-  border-radius: 50px;
 }
 .button:hover {
   background-color: #ce4114;
@@ -336,7 +252,6 @@
   justify-content: center;
   align-items: center;
 }
-
 .image-add {
   margin-top: 50px;
   width: 100px;
@@ -347,7 +262,14 @@
   width: 100%;
   display: block;
 }
-
+.el-tabs__item:hover {
+  color: #ce4114;
+  cursor: pointer;
+}
+.el-tabs__item.is-active {
+  color: white;
+  background-color: #ce4114;
+}
 .tab-content {
   margin-top: 30px;
 }
@@ -371,15 +293,11 @@ export default {
       category: '厨房',
       userInfo: '',
       myItems: [],
-      myFans: [],
-      myFollows: [],
-      myCollections: [],
-      myDrafts: [],
       foodPageOffset: 8,
       fansPageOffset: 8,
       followPageOffset: 8,
       collectionPageOffset: 8,
-      draftPageOffset: 8
+      isFollow: false
     }
   },
   async mounted() {
@@ -403,11 +321,30 @@ export default {
         }
       })
     await self.$axios
+      .get('/fans/isFollow', {
+        params: {
+          userid: self.userInfo._id
+        }
+      })
+      .then(resp => {
+        if (resp.status === 200) {
+          if (resp.data && resp.data.code === 0) {
+            if (resp.data.data) {
+              self.isFollow = true
+            }
+          } else {
+            self.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
+          }
+        } else {
+          self.$message.error(`服务器内部错误，错误码：${resp.status}`)
+        }
+      })
+    await self.$axios
       .get('/items/getItemsByCreator', {
         params: {
           creator: self.userInfo._id,
           offset: 0,
-          limit: 7
+          limit: 8
         }
       })
       .then(resp => {
@@ -420,26 +357,26 @@ export default {
         } else {
           ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
         }
-      })
-    await self.$axios
-      .get('/fans/getFansList', {
-        params: {
-          userid: self.userInfo._id,
-          offset: 0,
-          limit: 7
-        }
-      })
-      .then(resp => {
-        if (resp.status === 200) {
-          if (resp.data && resp.data.code === 0) {
-            self.myFans = resp.data.data
-          } else {
-            ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-          }
-        } else {
-          ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-        }
       }),
+      await self.$axios
+        .get('/fans/getFansList', {
+          params: {
+            userid: self.userInfo._id,
+            offset: 0,
+            limit: 7
+          }
+        })
+        .then(resp => {
+          if (resp.status === 200) {
+            if (resp.data && resp.data.code === 0) {
+              self.myFans = resp.data.data
+            } else {
+              ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
+            }
+          } else {
+            ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
+          }
+        }),
       await self.$axios
         .get('/fans/getFollowList', {
           params: {
@@ -477,31 +414,9 @@ export default {
           } else {
             ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
           }
-        }),
-      await self.$axios
-        .get('/drafts/getDraftList', {
-          params: {
-            userid: self.userInfo._id,
-            offset: 0,
-            limit: 8
-          }
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              self.myDrafts = resp.data.data
-            } else {
-              ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-            }
-          } else {
-            ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-          }
         })
   },
   methods: {
-    toEdit: function(id) {
-      this.$router.push({ path: '/items/itemUpdate', query: { _id: id } })
-    },
     handleClick(tab, event) {
       //console.log(tab, event)
     },
@@ -511,13 +426,50 @@ export default {
         type: 'success'
       })
     },
+    addFollow: function(userid) {
+      const self = this
+
+      self.$axios.post('/fans/addFollow', { userid }).then(resp => {
+        if (resp.status === 200) {
+          if (resp.data && resp.data.code === 0) {
+            self.$message({
+              message: '关注成功',
+              type: 'success'
+            })
+            self.isFollow = true
+          } else {
+            self.$message.error(resp.data.msg)
+          }
+        } else {
+          self.$message.error('服务器内部错误，错误码：' + resp.status)
+        }
+      })
+    },
+    deleteFollow: function(userid) {
+      const self = this
+      self.$axios.post('/fans/deleteFollow', { userid }).then(resp => {
+        if (resp.status === 200) {
+          if (resp.data && resp.data.code === 0) {
+            self.$message({
+              message: '取消关注成功',
+              type: 'success'
+            })
+            self.isFollow = false
+          } else {
+            self.$message.error(resp.data.msg)
+          }
+        } else {
+          self.$message.error('服务器内部错误，错误码：' + resp.status)
+        }
+      })
+    },
     getMoreItems: async function() {
       const self = this
       await self.$axios
         .get('/items/getItemsByCreator', {
           params: {
             creator: self.userInfo._id,
-            offset: self.pageOffset,
+            offset: self.foodPageOffset,
             limit: 8
           }
         })
@@ -528,7 +480,7 @@ export default {
                 self.$message.error('没有更多内容啦！！！')
               } else {
                 self.myItems = self.myItems.concat(resp.data.data)
-                self.pageOffset = self.pageOffset + 8
+                self.foodPageOffset = self.foodPageOffset + 8
               }
             } else {
               ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
@@ -618,48 +570,6 @@ export default {
             ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
           }
         })
-    },
-    deleteCollection: async function(itemid) {
-      const self = this
-      self.$axios
-        .post('/collections/deleteCollection', { itemid })
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              self.$message({
-                message: '取消收藏成功',
-                type: 'success'
-              })
-            } else {
-              self.$message.error(resp.data.msg)
-            }
-          } else {
-            self.$message.error('服务器内部错误，错误码：' + resp.status)
-          }
-        })
-    },
-    editDraft: function(draftid) {
-      this.$router.push({
-        path: '/items/itemCreate',
-        query: { _id: draftid }
-      })
-    },
-    deleteDraft: function(draftid) {
-      const self = this
-      self.$axios.post('/drafts/deleteDraft', { _id: draftid }).then(resp => {
-        if (resp.status === 200) {
-          if (resp.data && resp.data.code === 0) {
-            self.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-          } else {
-            self.$message.error(resp.data.msg)
-          }
-        } else {
-          self.$message.error('服务器内部错误，错误码：' + resp.status)
-        }
-      })
     }
   }
 }
