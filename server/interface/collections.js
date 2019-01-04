@@ -76,6 +76,7 @@ router.get('/getCollectionList', async (ctx, next) => {
     results[i].collectioncount = await Collection.countDocuments({
       itemid
     })
+    results[i].create = new Date(results[i].create).toLocaleDateString()
   }
   if (results) {
     ctx.body = {

@@ -285,7 +285,7 @@ export default {
               if (value == '') {
                 callback(new Error('请选择标签'))
               } else if (value.length >= 5) {
-                callback(new Error('最多可以选择5个标签'))
+                callback(new Error('最多可以选择4个标签'))
               } else {
                 callback()
               }

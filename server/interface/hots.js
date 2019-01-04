@@ -2,6 +2,8 @@ import Router from 'koa-router'
 import Axios from 'axios'
 import multer from 'koa-multer' //加载koa-multer模块
 import Item from '../dbs/models/items'
+import Collection from '../dbs/models/collections'
+import User from '../dbs/models/users'
 //文件上传
 
 let router = new Router({
@@ -54,7 +56,20 @@ router.get('/getHots', async (ctx, next) => {
     category: {
       $regex: category ? category : ''
     }
-  }).limit(limit)
+  })
+    .limit(limit)
+    .lean()
+  for (let i = 0; i < hots.length; i++) {
+    let itemid = hots[i]._id
+    let userid = hots[i].creator
+    hots[i].collectioncount = await Collection.countDocuments({
+      itemid
+    })
+    hots[i].creatorinfo = await User.findOne({
+      _id: userid
+    })
+    hots[i].create = new Date(hots[i].create).toLocaleDateString()
+  }
   if (hots) {
     ctx.body = {
       code: 0,

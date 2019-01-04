@@ -63,23 +63,17 @@
                     class="image">
                 </a>
                 <div style="padding: 14px;">
-                  <span class="card-title">{{ cookData.title }}</span>
+                  <a :href="'/items/itemDetail?id='+cookData._id">{{ cookData.title }}</a>
+                  <time class="time float-right ">{{ cookData.create }}</time>
                   <div class="bottom clearfix">
-                    <i class="mumuteaiconfont">&#xe656;</i>
-                    <span>100</span>
-                    <span>&nbsp;&nbsp;&nbsp;</span>
-                    <i class="mumuteaiconfont">&#xe67b;</i>
+                    <i class="mumuteaiconfont font-18 color-red">&#xe67b;</i>
                     <span>{{ cookData.collectioncount }}</span>
-                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <el-button
-                      round
-                      size="small"
-                      class="button"
-                      icon="el-icon-edit"
-                      @click="toEdit(cookData._id)">编辑</el-button>
+                    <a
+                      href="javascript:;"
+                      class="float-right"
+                      @click="toEdit(cookData._id)">编辑</a>
                   </div>
                 </div>
-
               </el-card>
             </el-col>
             <el-col
@@ -97,7 +91,7 @@
                   </div>
                   <div style="padding: 14px;" >
                     <div class="bottom clearfix">
-                      <span class="add-text">创建美食</span>
+                      <span class="add-text font-18">创建美食</span>
                     </div>
                   </div>
                 </a>
@@ -199,23 +193,17 @@
                     class="image">
                 </a>
                 <div style="padding: 14px;">
-                  <span class="card-title">{{ collection.title }}</span>
+                  <a :href="'/items/itemDetail?id='+collection._id">{{ collection.title }}</a>
+                  <time class="time float-right ">{{ collection.create }}</time>
                   <div class="bottom clearfix">
-                    <i class="mumuteaiconfont">&#xe656;</i>
-                    <span>100</span>
-                    <span>&nbsp;&nbsp;&nbsp;</span>
-                    <i class="mumuteaiconfont">&#xe67b;</i>
+                    <i class="mumuteaiconfont font-18 color-red">&#xe67b;</i>
                     <span>{{ collection.collectioncount }}</span>
-                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <el-button
-                      round
-                      size="small"
-                      class="button"
-                      icon="el-icon-delete"
-                      @click="deleteCollection(collection._id)">取消收藏</el-button>
+                    <a
+                      href="javascript:;"
+                      class="float-right"
+                      @click="deleteCollection(collection._id)">取消收藏</a>
                   </div>
                 </div>
-
               </el-card>
             </el-col>
           </el-row>
@@ -249,23 +237,14 @@
                 <div style="padding: 14px;">
                   <span class="card-title">{{ draft.title?draft.title:'未命名' }}</span>
                   <div class="bottom clearfix">
-                    <el-button
-                      round
-                      size="small"
-                      class="button"
-                      icon="el-icon-edit"
-                      @click="editDraft(draft._id)">
-                      编辑</el-button>
-                    <el-button
-                      round
-                      size="small"
-                      class="button"
-                      icon="el-icon-delete"
-                      @click="deleteDraft(draft._id)">
-                      删除</el-button>
+                    <a
+                      href="javascript:;"
+                      @click="editDraft(draft._id)">编辑</a>
+                    <a
+                      href="javascript:;"
+                      @click="deleteDraft(draft._id)">删除</a>
                   </div>
                 </div>
-
               </el-card>
             </el-col>
           </el-row>
@@ -284,11 +263,7 @@
 .person-card {
   margin-bottom: 10px;
 }
-.button {
-  border-color: #ce4114 !important;
-  color: #ce4114;
-  background-color: white;
-}
+
 .fans-photo {
   width: 100px;
   height: 100px;
@@ -323,11 +298,10 @@
 }
 .bottom {
   margin-top: 15px;
-  line-height: 12px;
+  line-height: 14px;
 }
 .add-text {
-  line-height: 3;
-  font-size: 20px;
+  line-height: 2;
   color: #ce4114;
 }
 .upload-content {

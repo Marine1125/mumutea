@@ -16,14 +16,6 @@
             alt="">
         </div>
         <div class="rate-content">
-          <div class="float-left rate">
-            <el-rate
-              v-model="rate"
-              disabled
-              show-score
-              text-color="#ff9900"
-              score-template="{value}分"/>
-          </div>
           <div class="float-right">
             <span>123人收藏</span>
             <el-button
@@ -59,9 +51,13 @@
         <div class="side-content">
           <el-row class="center-content">
             <img
+              v-if="userInfo.photo"
               :src="userInfo.photo"
-              class="photo"
-              alt="~/assets/images/no-photo.jpg">
+              class="photo">
+            <img
+              v-else
+              src="~/assets/images/no-photo.jpg"
+              class="photo">
           </el-row>
           <el-row class="center-content">{{ userInfo.username }}</el-row>
           <el-row class="center-content"><span>关注：{{ userInfo.follows }}人</span><span>&nbsp;&nbsp;&nbsp;</span><span>粉丝：{{ userInfo.fans }}人</span></el-row>
@@ -261,8 +257,7 @@ export default {
       breadcrumbs,
       creatorItems,
       userInfo,
-      isFollow,
-      rate: 4.7
+      isFollow
     }
   },
   methods: {
@@ -284,23 +279,39 @@ export default {
         }
       })
     },
-    addFollow: function(userid) {
+    addFollow: async function(userid) {
       const self = this
-      self.$axios.post('/fans/addFollow', { userid }).then(resp => {
+      let isLogin = ''
+      await self.$axios.get('/users/getLoginUser').then(resp => {
         if (resp.status === 200) {
           if (resp.data && resp.data.code === 0) {
-            self.$message({
-              message: '关注成功',
-              type: 'success'
-            })
-            self.isFollow = true
+            isLogin = true
           } else {
-            self.$message.error(resp.data.msg)
+            isLogin = false
           }
         } else {
           self.$message.error('服务器内部错误，错误码：' + resp.status)
         }
       })
+      if (isLogin) {
+        await self.$axios.post('/fans/addFollow', { userid }).then(resp => {
+          if (resp.status === 200) {
+            if (resp.data && resp.data.code === 0) {
+              self.$message({
+                message: '关注成功',
+                type: 'success'
+              })
+              self.isFollow = true
+            } else {
+              self.$message.error(resp.data.msg)
+            }
+          } else {
+            self.$message.error('服务器内部错误，错误码：' + resp.status)
+          }
+        })
+      } else {
+        self.$router.push({ path: '/users/signin' })
+      }
     },
     deleteFollow: function(userid) {
       const self = this

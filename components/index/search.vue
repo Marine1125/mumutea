@@ -21,10 +21,7 @@
 <style scoped>
 .serach-input {
   width: 40%;
-  margin: 30px 30%;
-}
-.serach-input a {
-  margin: 0 10px 0 0;
+  margin: 30px 30px 10px 30%;
 }
 .el-button--text {
   color: #ce4114;

@@ -1,8 +1,7 @@
 <template>
-  <el-row :gutter="20">
+  <el-row >
     <el-col
       :span="4"
-      style=""
       class="rainbow">
       <el-row class="item-category">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;木木家</el-row>
       <hr>
@@ -34,7 +33,9 @@
           @click="gouToMore('烘焙')">烘焙</el-button>
       </el-row>
     </el-col>
-    <el-col :span="20">
+    <el-col
+      :span="19"
+      :offset="1">
       <el-carousel height="450px">
         <el-carousel-item
           v-for="item in $store.state.item.hotItemList"

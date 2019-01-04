@@ -166,17 +166,16 @@ router.get('/exit', async (ctx, next) => {
 
 router.get('/getLoginUser', async (ctx, next) => {
   if (ctx.isAuthenticated()) {
-    const { username, email, _id } = ctx.session.passport.user
+    const result = ctx.session.passport.user
     ctx.body = {
-      user: username,
-      email,
-      _id
+      code: 0,
+      data: result
     }
   } else {
     ctx.body = {
-      user: '',
-      email: '',
-      _id: ''
+      code: -1,
+      data: '',
+      msg: '用户未登录'
     }
   }
 })

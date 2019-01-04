@@ -71,13 +71,11 @@
                     class="image">
                 </a>
                 <div style="padding: 14px;">
-                  <span class="card-title">{{ cookData.title }}</span>
+                  <a :href="'/items/itemDetail?id='+cookData._id">{{ cookData.title }}</a>
+                  <time class="time float-right ">{{ cookData.create }}</time>
                   <div class="bottom clearfix">
-                    <i class="mumuteaiconfont">&#xe656;</i>
-                    <span>100</span>
-                    <span>&nbsp;&nbsp;&nbsp;</span>
-                    <i class="mumuteaiconfont">&#xe67b;</i>
-                    <span>100</span>
+                    <i class="mumuteaiconfont font-18 color-red">&#xe67b;</i>
+                    <span>{{ cookData.collectioncount }}</span>
                   </div>
                 </div>
               </el-card>
@@ -176,13 +174,11 @@
                     class="image">
                 </a>
                 <div style="padding: 14px;">
-                  <span class="card-title">{{ collection.title }}</span>
+                  <a :href="'/items/itemDetail?id='+collection._id">{{ collection.title }}</a>
+                  <time class="time float-right ">{{ collection.create }}</time>
                   <div class="bottom clearfix">
-                    <i class="mumuteaiconfont">&#xe656;</i>
-                    <span>100</span>
-                    <span>&nbsp;&nbsp;&nbsp;</span>
-                    <i class="mumuteaiconfont">&#xe67b;</i>
-                    <span>100</span>
+                    <i class="mumuteaiconfont font-18 color-red">&#xe67b;</i>
+                    <span>{{ collection.collectioncount }}</span>
                   </div>
                 </div>
               </el-card>
@@ -293,6 +289,9 @@ export default {
       category: '厨房',
       userInfo: '',
       myItems: [],
+      myFans: [],
+      myFollows: [],
+      myCollections: [],
       foodPageOffset: 8,
       fansPageOffset: 8,
       followPageOffset: 8,
@@ -333,10 +332,10 @@ export default {
               self.isFollow = true
             }
           } else {
-            self.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
+            //self.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
           }
         } else {
-          self.$message.error(`服务器内部错误，错误码：${resp.status}`)
+          //self.$message.error(`服务器内部错误，错误码：${resp.status}`)
         }
       })
     await self.$axios
@@ -426,24 +425,39 @@ export default {
         type: 'success'
       })
     },
-    addFollow: function(userid) {
+    addFollow: async function(userid) {
       const self = this
-
-      self.$axios.post('/fans/addFollow', { userid }).then(resp => {
+      let isLogin = ''
+      await self.$axios.get('/users/getLoginUser').then(resp => {
         if (resp.status === 200) {
           if (resp.data && resp.data.code === 0) {
-            self.$message({
-              message: '关注成功',
-              type: 'success'
-            })
-            self.isFollow = true
+            isLogin = true
           } else {
-            self.$message.error(resp.data.msg)
+            isLogin = false
           }
         } else {
           self.$message.error('服务器内部错误，错误码：' + resp.status)
         }
       })
+      if (isLogin) {
+        await self.$axios.post('/fans/addFollow', { userid }).then(resp => {
+          if (resp.status === 200) {
+            if (resp.data && resp.data.code === 0) {
+              self.$message({
+                message: '关注成功',
+                type: 'success'
+              })
+              self.isFollow = true
+            } else {
+              self.$message.error(resp.data.msg)
+            }
+          } else {
+            self.$message.error('服务器内部错误，错误码：' + resp.status)
+          }
+        })
+      } else {
+        self.$router.push({ path: '/users/signin' })
+      }
     },
     deleteFollow: function(userid) {
       const self = this

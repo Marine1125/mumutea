@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <el-row
       v-for="(step,index) in steps"
       :gutter="20"
@@ -21,9 +21,6 @@ img {
 <script>
 export default {
   // eslint-disable-next-line vue/require-prop-types
-  props: ['steps'],
-  data() {
-    return {}
-  }
+  props: ['steps']
 }
 </script>

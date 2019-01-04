@@ -38,14 +38,53 @@ a:focus, a:hover {
 .el-card {
   margin-bottom: 20px;
 }
-.el-card img {
-  transition: All 0.4s ease-in-out;
-}
 .el-card img:hover {
-  transform: scale(1.1);
+  opacity: 0.9;
 }
 .button {
   border-color: #ce4114 !important;
   color: #ce4114;
   background-color: white;
+}
+.el-button--text {
+  color: #ce4114;
+}
+.content-center{
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+.font-18{
+  font-size: 18px;
+}
+.font-15{
+  font-size: 15px;
+}
+.time {
+  margin-top: 5px;
+  font-size: 15px;
+  color: #999;
+}
+.page-button {
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #dcdfe6;
+  -webkit-appearance: none;
+  text-align: center;
+  box-sizing: border-box;
+  outline: 0;
+  margin: 0;
+  transition: 0.1s;
+  font-weight: 500;
+  padding: 12px 20px;
+  font-size: 14px;
+  border-radius: 20px;
+  width: 100%;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 1000;
 }

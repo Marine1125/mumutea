@@ -11,7 +11,7 @@
         </a>
       </div>
       <div
-        v-if="username"
+        v-if="userInfo"
         class="header-right">
         <a
           href="/exit"
@@ -20,10 +20,15 @@
           trigger="click"
           class="floatright">
           <span class="el-dropdown-link color-red">
-            你好！{{ username }}<i class="el-icon-arrow-down el-icon--right"/>
+            <img
+              :src="userInfo.photo"
+              class="user-photo"
+              alt="">
+            <span>你好！{{ userInfo.username }}</span>
+            <i class="el-icon-arrow-down el-icon--right"/>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item><a :href="'/users/userCenter?_id='+id">用户中心</a></el-dropdown-item>
+            <el-dropdown-item><a :href="'/users/userCenter?_id='+userInfo._id">用户中心</a></el-dropdown-item>
             <el-dropdown-item divided><a href="/backup/categoryList">分类管理</a></el-dropdown-item>
             <el-dropdown-item><a href="/backup/LabelList">标签管理</a></el-dropdown-item>
             <el-dropdown-item><a href="/backup/itemTable">热门管理</a></el-dropdown-item>
@@ -81,29 +86,35 @@ img {
 }
 .el-dropdown {
   float: right;
-  margin: 20px;
+  margin: 10px;
   color: #409eff;
+}
+.el-dropdown-link {
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+.user-photo {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  margin: 0 5px;
 }
 </style>
 <script>
 export default {
   data() {
     return {
-      username: '',
-      id: '',
-      email: ''
+      userInfo: ''
     }
   },
   async mounted() {
-    console.log('mounted')
     await this.$axios.get('/users/getLoginUser').then(resp => {
       if (resp.status === 200) {
-        if (resp.data && resp.data.user) {
-          this.username = resp.data.user
-          this.id = resp.data._id
-          this.email = resp.data.email
+        if (resp.data && resp.data.data) {
+          this.userInfo = resp.data.data
         } else {
-          this.username = ''
+          this.userInfo = ''
         }
       }
     })

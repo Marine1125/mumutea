@@ -3,6 +3,7 @@ import Axios from 'axios'
 import multer from 'koa-multer' //加载koa-multer模块
 import Item from '../dbs/models/items'
 import Collection from '../dbs/models/collections'
+import User from '../dbs/models/users'
 //文件上传
 
 let router = new Router({
@@ -89,6 +90,8 @@ router.post('/updateItem', async (ctx, next) => {
 
 router.get('/getItems', async (ctx, next) => {
   let title = ''
+  const limit = parseInt(ctx.query.limit ? ctx.query.limit : 20)
+  const offset = parseInt(ctx.query.offset ? ctx.query.offset : 0)
   if (ctx.query.title) {
     title = decodeURIComponent(ctx.query.title)
   }
@@ -98,6 +101,20 @@ router.get('/getItems', async (ctx, next) => {
       $regex: title ? title : ''
     }
   })
+    .skip(offset)
+    .limit(limit)
+    .lean()
+  for (let i = 0; i < items.length; i++) {
+    let itemid = items[i]._id
+    let userid = items[i].creator
+    items[i].collectioncount = await Collection.countDocuments({
+      itemid
+    })
+    items[i].creatorinfo = await User.findOne({
+      _id: userid
+    })
+    items[i].create = new Date(items[i].create).toLocaleDateString()
+  }
   if (items) {
     ctx.body = {
       code: 0,
@@ -145,8 +162,8 @@ router.get('/getItemsByCreator', async (ctx, next) => {
     items[i].collectioncount = await Collection.countDocuments({
       itemid
     })
+    items[i].create = new Date(items[i].create).toLocaleDateString()
   }
-  console.log(items)
   if (items) {
     ctx.body = {
       code: 0,

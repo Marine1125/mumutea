@@ -60,7 +60,15 @@ router.post('/deleteFollow', async (ctx, next) => {
 })
 router.get('/isFollow', async (ctx, next) => {
   const userid = ctx.query.userid
-  const fansid = ctx.session.passport.user._id
+  let fansid = ''
+  if (!ctx.session.passport.user) {
+    ctx.body = {
+      code: -1,
+      msg: '未登录'
+    }
+    return
+  }
+  fansid = ctx.session.passport.user._id
   let result = await Fans.findOne({
     userid,
     fansid
