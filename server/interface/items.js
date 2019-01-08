@@ -70,7 +70,8 @@ router.post('/updateItem', async (ctx, next) => {
       ingredients,
       filename,
       summary,
-      label
+      label,
+      status: '0'
     }
   )
   if (result) {
@@ -92,11 +93,13 @@ router.get('/getItems', async (ctx, next) => {
   let title = ''
   const limit = parseInt(ctx.query.limit ? ctx.query.limit : 20)
   const offset = parseInt(ctx.query.offset ? ctx.query.offset : 0)
+  const status = ctx.query.status ? ctx.query.status : '1'
   if (ctx.query.title) {
     title = decodeURIComponent(ctx.query.title)
   }
   let items = await Item.find({
     category: { $regex: ctx.query.category ? ctx.query.category : '' },
+    status,
     title: {
       $regex: title ? title : ''
     }
@@ -153,7 +156,8 @@ router.get('/getItemsByTitle', async (ctx, next) => {
 router.get('/getItemsByCreator', async (ctx, next) => {
   const offset = parseInt(ctx.query.offset)
   const limit = parseInt(ctx.query.limit)
-  let items = await Item.find({ creator: ctx.query.creator })
+  const status = ctx.query.status ? ctx.query.status : '1'
+  let items = await Item.find({ creator: ctx.query.creator, status })
     .limit(limit)
     .skip(offset)
     .lean()
@@ -194,6 +198,62 @@ router.get('/getItemDetail', async (ctx, next) => {
     ctx.body = {
       code: -1,
       msg: 'data not exist'
+    }
+  }
+})
+
+router.post('/reviewItem', async (ctx, next) => {
+  console.log('123')
+  const { _id, status } = ctx.request.body
+  let result = await Item.updateOne(
+    { _id },
+    {
+      status
+    }
+  )
+  if (result) {
+    ctx.body = {
+      code: 0,
+      data: _id,
+      msg: ''
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      data: '',
+      msg: 'create error'
+    }
+  }
+})
+
+router.get('/getAllItems', async (ctx, next) => {
+  let items = await Item.find()
+  if (items) {
+    ctx.body = {
+      code: 0,
+      data: items,
+      msg: ''
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      msg: 'create error'
+    }
+  }
+})
+router.post('/removeItem', async (ctx, next) => {
+  const _id = ctx.request.body
+  let result = await Item.remove({ _id })
+  if (result) {
+    ctx.body = {
+      code: 0,
+      data: result,
+      msg: ''
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      msg: 'create error'
     }
   }
 })

@@ -15,8 +15,7 @@ const UserSchema = new Schema({
     required: true
   },
   photo: {
-    type: String,
-    required: true
+    type: String
   },
   create: {
     type: Date,
@@ -40,6 +39,12 @@ const UserSchema = new Schema({
   },
   constellation: {
     type: String
+  },
+  //角色 0:nomal;1:admin
+  role: {
+    type: String,
+    required: true,
+    default: 0
   }
 })
 

@@ -48,11 +48,13 @@ router.post('/deleteHot', async (ctx, next) => {
 
 router.get('/getHots', async (ctx, next) => {
   let limit = ctx.query.limit ? ctx.query.limit : 4
+  let status = ctx.query.status ? ctx.query.status : '1'
   let category = ctx.query.category
     ? decodeURIComponent(ctx.query.category)
     : ''
   let hots = await Item.find({
     ishot: '1',
+    status: status,
     category: {
       $regex: category ? category : ''
     }

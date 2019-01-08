@@ -71,7 +71,13 @@
                     <a
                       href="javascript:;"
                       class="float-right"
+                      @click="removeItem(cookData._id)">删除</a>
+                    <a
+                      href="javascript:;"
+                      class="float-right"
+                      style="margin-right:10px"
                       @click="toEdit(cookData._id)">编辑</a>
+
                   </div>
                 </div>
               </el-card>
@@ -115,23 +121,28 @@
               :key="index"
               class="person-card">
               <el-row :gutter="30">
-                <a :href="'/users/mainPage?_id='+ fans._id">
-                  <el-col :span="8">
-                    <img
-                      :src="fans.photo"
-                      class="fans-photo"
-                      alt="">
-                  </el-col>
-                  <el-col :span="16">
-                    <el-row><h1>{{ fans.username }}</h1></el-row>
-                    <el-row>
-                      <span>{{ fans.sex }}</span>
-                      <span>&nbsp;&nbsp;&nbsp;</span>
-                      <span>{{ fans.constellation }}</span>
-                    </el-row>
-                    <el-row>{{ fans.introduce }}</el-row>
-                  </el-col>
-                </a>
+                <el-col :span="8">
+                  <img
+                    :src="fans.photo"
+                    class="fans-photo"
+                    alt="">
+                </el-col>
+                <el-col :span="16">
+                  <el-row>
+                    <a
+                      :href="'/users/mainPage?_id='+ fans._id"
+                      class="font-18">{{ fans.username }}</a>
+                  </el-row>
+                  <el-row>
+                    <span>{{ fans.sex }}</span>
+                    <span>&nbsp;&nbsp;&nbsp;</span>
+                    <span>{{ fans.constellation }}</span>
+                  </el-row>
+                  <el-row>生日：{{ fans.birthday }}</el-row>
+                  <el-row style="height:19px;overflow:hidden;">{{ fans.introduce }}</el-row>
+                  <el-row>粉丝：{{ fans.fanscount }}&nbsp;&nbsp;&nbsp;关注：{{ fans.followscount }}</el-row>
+                </el-col>
+
               </el-row>
             </el-col>
           </el-row>
@@ -151,23 +162,26 @@
               :span="6"
               :key="index">
               <el-row :gutter="30">
-                <a :href="'/users/mainPage?_id='+ follow._id">
-                  <el-col :span="8">
-                    <img
-                      :src="follow.photo"
-                      class="fans-photo"
-                      alt="">
-                  </el-col>
-                  <el-col :span="16">
-                    <el-row><h1>{{ follow.username }}</h1></el-row>
-                    <el-row>
-                      <span>{{ follow.sex }}</span>
-                      <span>&nbsp;&nbsp;&nbsp;</span>
-                      <span>{{ follow.constellation }}</span>
-                    </el-row>
-                    <el-row>{{ follow.introduce }}</el-row>
-                  </el-col>
-                </a>
+                <el-col :span="8">
+                  <img
+                    :src="follow.photo"
+                    class="fans-photo"
+                    alt="">
+                </el-col>
+                <el-col :span="16">
+                  <a
+                    :href="'/users/mainPage?_id='+ follow._id"
+                    class="font-18">{{ follow.username }}</a>
+                  <el-row>
+                    <span>{{ follow.sex }}</span>
+                    <span>&nbsp;&nbsp;&nbsp;</span>
+                    <span>{{ follow.constellation }}</span>
+                  </el-row>
+                  <el-row>生日：{{ follow.birthday }}</el-row>
+                  <el-row style="height:19px;overflow:hidden;">{{ follow.introduce }}</el-row>
+                  <el-row>粉丝：{{ follow.fanscount }}&nbsp;&nbsp;&nbsp;关注：{{ follow.followscount }}</el-row>
+                </el-col>
+
               </el-row>
             </el-col>
           </el-row>
@@ -485,13 +499,38 @@ export default {
         type: 'success'
       })
     },
+    removeItem: async function(_id) {
+      this.$confirm('此操作将永久删除该内容, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          const self = this
+          self.$axios.post('/items/removeItem', { _id }).then(resp => {
+            if (resp.status === 200) {
+              if (resp.data && resp.data.code === 0) {
+                self.$message({
+                  message: '删除成功',
+                  type: 'success'
+                })
+              } else {
+                self.$message.error(resp.data.msg)
+              }
+            } else {
+              self.$message.error('服务器内部错误，错误码：' + resp.status)
+            }
+          })
+        })
+        .catch(() => {})
+    },
     getMoreItems: async function() {
       const self = this
       await self.$axios
         .get('/items/getItemsByCreator', {
           params: {
             creator: self.userInfo._id,
-            offset: self.pageOffset,
+            offset: self.foodPageOffset,
             limit: 8
           }
         })
@@ -502,7 +541,7 @@ export default {
                 self.$message.error('没有更多内容啦！！！')
               } else {
                 self.myItems = self.myItems.concat(resp.data.data)
-                self.pageOffset = self.pageOffset + 8
+                self.foodPageOffset = self.foodPageOffset + 8
               }
             } else {
               ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)

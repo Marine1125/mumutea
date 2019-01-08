@@ -97,7 +97,14 @@ router.get('/getFansList', async (ctx, next) => {
   fansList.forEach(item => {
     fansArray.push(item.fansid)
   })
-  let results = await Users.find({ _id: { $in: fansArray } })
+  let results = await Users.find({ _id: { $in: fansArray } }).lean()
+  for (let i = 0; i < results.length; i++) {
+    results[i].fanscount = await Fans.countDocuments({ userid: results[i]._id })
+    results[i].followscount = await Fans.countDocuments({
+      fansid: results[i]._id
+    })
+    results[i].birthday = new Date(results[i].birthday).toLocaleDateString()
+  }
   if (results) {
     ctx.body = {
       code: 0,
@@ -122,7 +129,14 @@ router.get('/getFollowList', async (ctx, next) => {
   followList.forEach(item => {
     followArray.push(item.userid)
   })
-  let results = await Users.find({ _id: { $in: followArray } })
+  let results = await Users.find({ _id: { $in: followArray } }).lean()
+  for (let i = 0; i < results.length; i++) {
+    results[i].fanscount = await Fans.countDocuments({ userid: results[i]._id })
+    results[i].followscount = await Fans.countDocuments({
+      fansid: results[i]._id
+    })
+    results[i].birthday = new Date(results[i].birthday).toLocaleDateString()
+  }
   if (results) {
     ctx.body = {
       code: 0,
