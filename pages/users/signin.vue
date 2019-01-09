@@ -58,7 +58,7 @@ export default {
         if (valid) {
           this.$axios
             .post('/users/signin', {
-              username: window.encodeURIComponent(self.loginForm.username),
+              username: self.loginForm.username,
               password: CryptoJS.MD5(self.loginForm.password).toString()
             })
             .then(resp => {

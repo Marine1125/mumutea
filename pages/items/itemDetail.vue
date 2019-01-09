@@ -184,7 +184,7 @@ export default {
             itemDetail = resp.data.data
             breadcrumbs.push({
               name: resp.data.data.category,
-              path: '/items/' + resp.data.data.category
+              path: '/items/itemList?category=' + resp.data.data.category
             })
             breadcrumbs.push({
               name: resp.data.data.title,

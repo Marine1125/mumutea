@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div style="background-color:#f1f1f1;">
     <footer class="footer">
       <div class="container">
-        <div class="footer-main">
+        <div class="float-left">
           <h4>链接</h4>
           <a
             href="https://github.com/ElemeFE/element"
@@ -24,28 +24,6 @@
             href="https://github.com/ElementUI/element-theme"
             target="_blank"
             class="footer-main-link">自定义主题工具</a>
-        </div>
-        <div class="footer-main">
-          <h4>社区</h4><a
-            href="https://gitter.im/ElemeFE/element"
-            target="_blank"
-            class="footer-main-link">在线讨论</a>
-          <a
-            href="https://github.com/ElemeFE/element/issues"
-            target="_blank"
-            class="footer-main-link">反馈建议</a>
-          <a
-            href="https://github.com/ElemeFE/element/blob/master/.github/CONTRIBUTING.zh-CN.md"
-            target="_blank"
-            class="footer-main-link">贡献指南</a>
-          <a
-            href="https://segmentfault.com/t/element-ui"
-            target="_blank"
-            class="footer-main-link">SegmentFault</a>
-          <a
-            href="https://github.com/ElementUI/awesome-element"
-            target="_blank"
-            class="footer-main-link">Awesome Element</a>
         </div>
         <div class="footer-social"><p class="footer-social-title">mumutea Fullerene</p><span/>
           <a
@@ -70,32 +48,24 @@
               <div style="text-align:center">扫一扫</div>
               <a slot="reference"><i class="mumuteaiconfont mumuteaicon-weixin"/></a>
             </el-popover>
-
           </span>
         </div>
       </div>
+      <div style="clear:both"/>
+      <div style="text-align:center">copyright:www.mumufamily.cn</div>
     </footer>
   </div>
 </template>
 <style scoped>
 .footer {
-  background-color: #f1f1f1;
-  width: 100%;
-  padding: 40px 150px;
-  box-sizing: border-box;
+  width: 1400px;
   height: 220px;
-  margin-top: 10px;
-}
-.footer .container {
-  box-sizing: border-box;
-  width: auto;
-}
-.footer .footer-main {
-  display: inline-block;
-  vertical-align: top;
-  margin-right: 110px;
+  min-width: 500px;
+  margin: 10px auto 10px;
+  background-color: #f1f1f1;
 }
 .footer .footer-social {
+  margin-top: 100px;
   float: right;
   text-align: center;
 }
@@ -118,7 +88,7 @@
   line-height: 1;
   margin: 0 0 15px;
 }
-.footer .footer-main .footer-main-link {
+.footer .footer-main-link {
   display: block;
   margin: 0;
   line-height: 2;

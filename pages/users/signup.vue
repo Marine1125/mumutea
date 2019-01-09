@@ -5,6 +5,7 @@
       :model="ruleForm"
       :rules="rules"
       status-icon
+      label-position="right"
       label-width="100px"
       class="demo-ruleForm">
       <el-form-item
@@ -44,7 +45,9 @@
         label=""
         prop="clause">
         <el-checkbox v-model="ruleForm.clause"/>
-        <a href="/terms">我阅读并同意条款</a>
+        <a
+          target="_blank"
+          href="/terms">我阅读并同意条款</a>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -56,6 +59,10 @@
   </div>
 </template>
 <style scoped>
+.demo-ruleForm {
+  width: 60%;
+  margin-top: 30px;
+}
 </style>
 
 <script>
@@ -73,6 +80,12 @@ export default {
             required: true,
             type: 'string',
             message: '请输入昵称',
+            trigger: 'change'
+          },
+          {
+            min: 1,
+            max: 7,
+            message: '长度在 1 到 7 个字符',
             trigger: 'change'
           },
           {
@@ -94,7 +107,8 @@ export default {
                     console.log('error')
                   }
                 })
-            }
+            },
+            trigger: 'change'
           }
         ],
         email: [
@@ -148,7 +162,6 @@ export default {
       }
     }
   },
-
   methods: {
     submitForm: function() {
       let self = this
@@ -156,7 +169,7 @@ export default {
         if (valid) {
           self.$axios
             .post('/users/signup', {
-              username: window.encodeURIComponent(self.ruleForm.name),
+              username: self.ruleForm.name,
               password: CryptoJS.MD5(self.ruleForm.password).toString(),
               email: self.ruleForm.email,
               code: self.ruleForm.vcode
@@ -198,7 +211,7 @@ export default {
       if (!namePass && !emailPass) {
         self.$axios
           .post('/users/verify', {
-            username: window.encodeURIComponent(self.ruleForm.name),
+            username: self.ruleForm.name,
             email: self.ruleForm.email
           })
           .then(resp => {

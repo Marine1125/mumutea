@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color:#f1f1f1">
     <el-header class="header">
       <div class="logo-content">
         <a href="/">
@@ -21,7 +21,13 @@
           class="floatright">
           <span class="el-dropdown-link color-red">
             <img
+              v-if="userInfo.photo"
               :src="userInfo.photo"
+              class="user-photo"
+              alt="">
+            <img
+              v-else
+              src="~/assets/images/no-photo.jpg"
               class="user-photo"
               alt="">
             <span>你好！{{ userInfo.username }}</span>
@@ -53,7 +59,9 @@
 </template>
 <style scoped>
 .header {
-  padding: 0 15%;
+  width: 1400px;
+  min-width: 500px;
+  margin: 0 auto;
   background-color: #f1f1f1;
 }
 

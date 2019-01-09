@@ -7,7 +7,7 @@
       <el-breadcrumb-item
         v-for="(breadcrumb,index) in breadcrumbs"
         :key="'breadcrumb'+ index"
-        :to="{ path: '/'+breadcrumb.path }">{{ breadcrumb.name }}</el-breadcrumb-item>
+        :to="{ path:breadcrumb.path }">{{ breadcrumb.name }}</el-breadcrumb-item>
     </el-breadcrumb>
 
   </div>
