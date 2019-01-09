@@ -1,4 +1,3 @@
-//const Koa = require('koa')
 import Koa from 'koa'
 import mongoose from 'mongoose'
 import bodyParser from 'koa-bodyparser'
