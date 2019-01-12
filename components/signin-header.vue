@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color:#f1f1f1">
     <el-header class="header">
       <div class="logo-content">
         <a href="/">
@@ -16,7 +16,9 @@
 </template>
 <style scoped>
 .header {
-  padding: 0 15%;
+  width: 1400px;
+  min-width: 500px;
+  margin: 0 auto;
   background-color: #f1f1f1;
 }
 .header-right a {

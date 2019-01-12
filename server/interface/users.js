@@ -22,21 +22,21 @@ router.post('/signup', async ctx => {
       if (new Date().getTime() - saveExpire > 0) {
         ctx.body = {
           code: -1,
-          msg: 'code expire'
+          msg: '验证码超时，请重新发送验证码'
         }
         return false
       }
     } else {
       ctx.body = {
         code: -1,
-        msg: 'code wrong'
+        msg: '验证码错误，请重新输入'
       }
       return false
     }
   } else {
     ctx.body = {
       code: -1,
-      msg: 'plase input code'
+      msg: '验证码不能为空，请输入验证码'
     }
     return false
   }
@@ -46,7 +46,7 @@ router.post('/signup', async ctx => {
   if (user.length) {
     ctx.body = {
       code: -1,
-      msg: 'user exist!'
+      msg: '用户名已存在，可不可以换一个呢'
     }
     return
   }
@@ -180,33 +180,49 @@ router.get('/getLoginUser', async (ctx, next) => {
   }
 })
 
-router.get('/getUsers', async ctx => {
+router.get('/getUserByName', async ctx => {
   let username = ctx.query.username
-  console.log(username)
   let where = {
     username
   }
-  let result = await User.find(where)
-  console.log(result)
-  if (result.length) {
+  let result = await User.findOne(where)
+  if (result) {
     ctx.body = {
       code: 0,
       msg: '',
-      username: result[0].username
+      data: result
     }
   } else {
     ctx.body = {
-      code: 0,
+      code: -1,
       msg: '',
-      username: ''
+      data: ''
     }
   }
-  console.log('user out')
+})
+router.get('/getUserByEmail', async ctx => {
+  let email = ctx.query.email
+  let where = {
+    email
+  }
+  let result = await User.findOne(where)
+  if (result) {
+    ctx.body = {
+      code: 0,
+      msg: '',
+      data: result
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      msg: '',
+      data: ''
+    }
+  }
 })
 
 router.get('/getUserById', async ctx => {
   let _id = ctx.query._id
-
   let where = {
     _id
   }
@@ -216,10 +232,10 @@ router.get('/getUserById', async ctx => {
   let follows = await Fans.countDocuments({
     fansid: _id
   })
-  let result = await User.findOne(where)
-  result = result.toJSON()
+  let result = await User.findOne(where).lean()
   result.fans = fans
   result.follows = follows
+  result.birthday = new Date(result.birthday).toLocaleDateString()
   if (result) {
     ctx.body = {
       code: 0,

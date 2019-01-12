@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="10">
+  <el-row :gutter="8">
     <el-col
       v-for="item in items"
       :key="item._id"
@@ -29,12 +29,7 @@
               v-for="item in item.label"
               :key="item">{{ item }}</el-tag>
           </el-row>
-          <el-row>
-            <span
-              v-for="item in item.ingredients"
-              :key="item.name">{{ item.name }}</span>
-          </el-row>
-          <el-row>{{ item.summary }}</el-row>
+          <el-row style="color: #999; line-height:20px">{{ item.summary }}</el-row>
           <el-row>
             <div class="bottom clearfix">
               <i class="mumuteaiconfont font-18 color-red">&#xe67b;</i>
@@ -85,7 +80,14 @@
   border-radius: 10px;
 }
 .el-row {
-  margin: 5px 0;
+  margin: 7px 0;
+}
+a {
+  color: #ce4114;
+}
+a:focus,
+a:hover {
+  color: #f79a29;
 }
 </style>
 <script>

@@ -167,7 +167,8 @@
   </div>
 </template>
 <style>
-.content {
+.demo-ruleForm {
+  width: 80%;
   margin-top: 30px;
 }
 .avatar-uploader {
@@ -396,7 +397,7 @@ export default {
     filenameUploadSuccess: function(res, file) {
       this.itemForm.filename = '/' + file.response.file
     },
-    createItem: function() {
+    createItem: async function() {
       self = this
       let formPass
       let stepPass
@@ -410,7 +411,28 @@ export default {
                   message: '创建成功',
                   type: 'success'
                 })
-                self.$router.push('/itemList')
+                if (self.$route.query._id) {
+                  self.$axios
+                    .post('/drafts/deleteDraft', { _id: self.$route.query._id })
+                    .then(resp => {
+                      if (resp.status === 200) {
+                        if (resp.data && resp.data.code === 0) {
+                          setTimeout(function() {
+                            self.$router.push('/user/userCenter')
+                          }, 3000)
+                        } else {
+                          self.$message.error(resp.data.msg)
+                        }
+                      } else {
+                        self.$message.error(
+                          '服务器内部错误，错误码：' + resp.status
+                        )
+                      }
+                    })
+                }
+                setTimeout(function() {
+                  self.$router.push('/user/userCenter')
+                }, 3000)
               } else {
                 this.$message.error(resp.data.msg)
               }
@@ -420,7 +442,6 @@ export default {
           })
         }
       })
-      console.log(this.itemForm)
     },
     addStep: function() {
       this.itemForm.steps.push({
@@ -470,7 +491,9 @@ export default {
                 message: '创建成功',
                 type: 'success'
               })
-              self.$router.go(-1)
+              setTimeout(function() {
+                self.$router.go(-1)
+              }, 3000)
             } else {
               this.$message.error(resp.data.msg)
             }
@@ -486,7 +509,9 @@ export default {
                 message: '创建成功',
                 type: 'success'
               })
-              self.$router.go(-1)
+              setTimeout(function() {
+                self.$router.go(-1)
+              }, 3000)
             } else {
               this.$message.error(resp.data.msg)
             }
@@ -507,7 +532,9 @@ export default {
               message: '删除成功',
               type: 'success'
             })
-            self.$router.go(-1)
+            setTimeout(function() {
+              self.$router.go(-1)
+            }, 3000)
           } else {
             self.$message.error(resp.data.msg)
           }

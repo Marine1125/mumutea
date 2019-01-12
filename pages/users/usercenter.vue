@@ -252,11 +252,15 @@
                   <span class="card-title">{{ draft.title?draft.title:'未命名' }}</span>
                   <div class="bottom clearfix">
                     <a
-                      href="javascript:;"
-                      @click="editDraft(draft._id)">编辑</a>
-                    <a
+                      class="float-right"
+                      style="margin:5px"
                       href="javascript:;"
                       @click="deleteDraft(draft._id)">删除</a>
+                    <a
+                      style="margin:5px"
+                      class="float-right"
+                      href="javascript:;"
+                      @click="editDraft(draft._id)">编辑</a>
                   </div>
                 </div>
               </el-card>
@@ -351,6 +355,13 @@
   font-weight: 700;
   word-break: break-all;
 }
+a {
+  color: #ce4114;
+}
+a:focus,
+a:hover {
+  color: #f79a29;
+}
 </style>
 <script>
 export default {
@@ -374,7 +385,7 @@ export default {
     const _id = this.$route.query._id
     const self = this
     await self.$axios
-      .get('/users/getUserById', {
+      .get('/users/getLoginUser', {
         params: {
           _id: _id
         }
@@ -384,7 +395,7 @@ export default {
           if (resp.data && resp.data.code === 0) {
             self.userInfo = resp.data.data
           } else {
-            self.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
+            self.$router.push({ path: '/users/signin' })
           }
         } else {
           self.$message.error(`服务器内部错误，错误码：${resp.status}`)

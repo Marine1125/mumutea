@@ -19,7 +19,9 @@
         <el-input v-model="ruleForm.email"/>
       </el-form-item>
       <el-form-item>
-        <el-button @click="sendCode">发送验证码</el-button>
+        <el-button
+          class="button"
+          @click="sendCode">发送验证码</el-button>
         <span class = "status">{{ statusMsg }}</span>
       </el-form-item>
       <el-form-item
@@ -43,17 +45,15 @@
       </el-form-item>
       <el-form-item
         label=""
-        prop="clause">
-        <el-checkbox v-model="ruleForm.clause"/>
-        <a
-          target="_blank"
-          href="/terms">我阅读并同意条款</a>
-      </el-form-item>
+        prop="clause"/>
       <el-form-item>
         <el-button
-          type="primary"
-          @click="submitForm('ruleForm')">注册</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
+          class="button"
+          @click="submitForm('ruleForm')">同意用户协议并注册</el-button>
+        <a
+          target="_blank"
+          class="terms"
+          href="/terms">《木木家用户协议》</a>
       </el-form-item>
     </el-form>
   </div>
@@ -63,6 +63,21 @@
   width: 60%;
   margin-top: 30px;
 }
+.el-checkbox__input.is-checked .el-checkbox__inner,
+.el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  background-color: #ce4114;
+  border-color: #ce4114;
+}
+.terms {
+  margin-left: 20px;
+  color: #ce4114;
+  text-decoration: underline;
+}
+.el-button:focus,
+.el-button:hover {
+  color: white;
+  background-color: #ce4114;
+}
 </style>
 
 <script>
@@ -71,6 +86,7 @@ export default {
   data() {
     return {
       statusMsg: '',
+      timerid: '',
       ruleForm: {
         name: ''
       },
@@ -80,23 +96,23 @@ export default {
             required: true,
             type: 'string',
             message: '请输入昵称',
-            trigger: 'change'
+            trigger: 'blur'
           },
           {
-            min: 1,
-            max: 7,
-            message: '长度在 1 到 7 个字符',
-            trigger: 'change'
+            min: 3,
+            max: 10,
+            message: '长度在 3 到 10 个字符',
+            trigger: 'blur'
           },
           {
             validator: async (rule, value, callback) => {
               let username = await this.$axios
-                .get('/users/getUsers', { params: { username: value } })
+                .get('/users/getUserByName', { params: { username: value } })
                 .then(resp => {
                   if (resp.status === 200) {
                     if (resp.data && resp.data.code === 0) {
-                      if (value === resp.data.username) {
-                        callback(new Error('用户名已存在'))
+                      if (resp.data.data) {
+                        callback(new Error('用户名已被注册'))
                       } else {
                         callback()
                       }
@@ -114,9 +130,35 @@ export default {
         email: [
           {
             required: true,
-            type: 'email',
             message: '请输入邮箱',
-            trigger: 'change'
+            trigger: 'blur'
+          },
+          {
+            type: 'email',
+            message: '请输入正确的邮箱',
+            trigger: 'blur'
+          },
+          {
+            validator: async (rule, value, callback) => {
+              let username = await this.$axios
+                .get('/users/getUserByEmail', { params: { email: value } })
+                .then(resp => {
+                  if (resp.status === 200) {
+                    if (resp.data && resp.data.code === 0) {
+                      if (resp.data.data) {
+                        callback(new Error('邮箱已被注册'))
+                      } else {
+                        callback()
+                      }
+                    } else {
+                      this.error = resp.data.msg
+                    }
+                  } else {
+                    console.log('error')
+                  }
+                })
+            },
+            trigger: 'blur'
           }
         ],
         vcode: [
@@ -124,21 +166,21 @@ export default {
             required: true,
             type: 'string',
             message: '请输入验证码',
-            trigger: 'change'
+            trigger: 'blur'
           }
         ],
         password: [
           {
             required: true,
             message: '请输入密码',
-            trigger: 'change'
+            trigger: 'blur'
           }
         ],
         cpassword: [
           {
             required: true,
             message: '请输入密码',
-            trigger: 'change'
+            trigger: 'blur'
           },
           {
             validator: (rule, value, callback) => {
@@ -150,13 +192,6 @@ export default {
                 callback()
               }
             }
-          }
-        ],
-        clause: [
-          {
-            required: 'true',
-            message: '请阅读并同意条款',
-            trigger: 'blur'
           }
         ]
       }
@@ -177,64 +212,66 @@ export default {
             .then(resp => {
               if (resp.status === 200) {
                 if (resp.data && resp.data.code === 0) {
-                  self.$router.push('/users/signin')
+                  self.$message({
+                    message: '恭喜您，注册成功！',
+                    type: 'success'
+                  })
+                  setTimeout(function() {
+                    self.$router.push('/users/signin')
+                  }, 3000)
                 } else {
-                  self.error = data.msg
+                  self.$message.error(resp.data.msg)
                 }
               } else {
-                self.error = `服务器错误，错误码${status}`
+                self.$message.error(`服务器开小差啦！错误码${status}`)
               }
-              setTimeout(function() {
-                self.error = ''
-              }, 1500)
             })
         }
       })
     },
-    sendCode: function() {
+    sendCode: async function() {
       let self = this
       let namePass
       let emailPass
       if (self.timerid) {
         return false
       }
-      this.$refs['ruleForm'].validateField('name', valid => {
-        namePass = valid
-      })
-      self.statusMsg = ''
-      if (namePass) {
-        return false
-      }
-      this.$refs['ruleForm'].validateField('email', valid => {
-        emailPass = valid
-      })
-      if (!namePass && !emailPass) {
-        self.$axios
-          .post('/users/verify', {
-            username: self.ruleForm.name,
-            email: self.ruleForm.email
-          })
-          .then(resp => {
-            if (resp.status === 200) {
-              if (resp.data && resp.data.code === 0) {
-                let count = 60
-                self.statusMsg = `验证码已发送，剩余${count--}秒`
-                self.timerid = setInterval(function() {
-                  self.statusMsg = `验证码已发送，剩余${count--}秒`
-                  if (count === 0) {
-                    clearInterval(self.timerid)
-                    self.statusMsg = ''
-                  }
-                }, 1000)
-              }
+      await this.$refs['ruleForm'].validateField('name', valid1 => {
+        if (valid1) {
+          return false
+        } else {
+          this.$refs['ruleForm'].validateField('email', valid2 => {
+            if (valid2) {
+              return false
             } else {
-              self.statusMsg = data.msg
+              self.statusMsg = ''
+              self.$axios
+                .post('/users/verify', {
+                  username: self.ruleForm.name,
+                  email: self.ruleForm.email
+                })
+                .then(resp => {
+                  if (resp.status === 200) {
+                    if (resp.data && resp.data.code === 0) {
+                      let count = 60
+                      self.statusMsg = `验证码已发送，剩余${count--}秒`
+                      self.timerid = setInterval(function() {
+                        self.statusMsg = `验证码已发送，剩余${count--}秒`
+                        if (count === 0) {
+                          clearInterval(self.timerid)
+                          self.timerid = ''
+                          self.statusMsg = ''
+                        }
+                      }, 1000)
+                    }
+                  } else {
+                    self.statusMsg = data.msg
+                  }
+                })
             }
           })
-      }
-    },
-    resetForm: function() {
-      this.ruleForm = {}
+        }
+      })
     }
   }
 }

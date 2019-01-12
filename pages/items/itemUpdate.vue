@@ -21,7 +21,7 @@
           :show-file-list="false"
           drag
           class="upload-demo"
-          action="/items/upload">
+          action="/utils/uploadFiles">
           <img
             v-if="itemForm.filename"
             :src="itemForm.filename"
@@ -114,7 +114,7 @@
               :show-file-list="false"
               :on-success="(res,file)=>{return onFileSuccess(res,file,index)}"
               class="avatar-uploader"
-              action="/items/upload">
+              action="/utils/uploadFiles">
               <img
                 v-if="step.stepImg"
                 :src="step.stepImg"
@@ -157,13 +157,13 @@
         <el-button
           type="primary"
           @click="createItem('itemForm')">提交</el-button>
-        <el-button @click="resetForm('itemForm')">重置</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 <style>
-.content {
+.demo-ruleForm {
+  width: 80%;
   margin-top: 30px;
 }
 .avatar-uploader {

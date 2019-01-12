@@ -205,6 +205,13 @@
 .category {
   margin: 20px 0px;
 }
+a {
+  color: #ce4114;
+}
+a:focus,
+a:hover {
+  color: #f79a29;
+}
 </style>
 <script>
 import Carousel from '../components/index/carousel.vue'

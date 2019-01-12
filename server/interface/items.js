@@ -187,6 +187,9 @@ router.get('/getItemDetail', async (ctx, next) => {
   let _id = ctx.query._id
   let item = await Item.findOne({
     _id
+  }).lean()
+  item.collectioncount = await Collection.countDocuments({
+    itemid: _id
   })
   if (item) {
     ctx.body = {

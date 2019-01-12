@@ -20,13 +20,6 @@ body {
 .color-yellow{
   color:#F79A29;
 }
-a{
-  color: #ce4114 !important;
-}
-a:focus, a:hover {
-  color: #F79A29 !important;
-}
-
 .el-tabs__item:hover {
   color: #ce4114 !important;
   cursor: pointer;
@@ -41,13 +34,17 @@ a:focus, a:hover {
 .el-card img:hover {
   opacity: 0.9;
 }
-.button {
-  border-color: #ce4114 !important;
+.el-button {
+  border-color: #ce4114;
   color: #ce4114;
   background-color: white;
 }
 .el-button--text {
   color: #ce4114;
+}
+.el-button:focus,.el-button:hover {
+  color: white ;
+  background-color: #ce4114 ;
 }
 .content-center{
   display: flex;

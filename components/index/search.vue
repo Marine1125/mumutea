@@ -9,16 +9,20 @@
     ><el-button
       slot="append"
       icon="el-icon-search"
+      class="search-button"
       @click="search"/></el-autocomplete>
-    <el-button
+    <a
       v-for="item in $store.state.item.hotItemList"
       :key="item._id"
-      type="text"
-      class="color-red"
-      @click="goToList(item.title)">{{ item.title }}</el-button>
+      href="javascript:void(0)"
+      class="hot-link"
+      @click="goToList(item.title)">{{ item.title }}</a>
   </div>
 </template>
 <style scoped>
+.search-button {
+  border: #ecf5ff;
+}
 .serach-input {
   width: 40%;
   margin: 30px 30px 10px 30%;
@@ -28,6 +32,16 @@
   background: 0 0;
   padding-left: 0;
   padding-right: 0;
+}
+.hot-link {
+  margin: 0 5px;
+}
+a {
+  color: #ce4114;
+}
+a:focus,
+a:hover {
+  color: #f79a29;
 }
 </style>
 <script>
@@ -95,9 +109,13 @@ export default {
       })
     },
     search: function() {
-      this.$store.commit('item/setCategory', 'all')
+      this.$store.commit('item/setCategory', '全部')
       this.$store.commit('item/setKeyword', this.keyword)
       this.fatchData()
+      this.$router.push({
+        path: '/items/itemList',
+        query: { keyword: this.keyword }
+      })
       console.log(this.keyword)
     },
     fatchData: async function() {

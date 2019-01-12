@@ -8,14 +8,14 @@
         :src="step.stepImg"
         alt=""></el-col>
       <el-col
-        :span="16"><div >{{ step.stepText }}</div></el-col>
+        :span="16" ><div class="font-18">{{ step.stepText }}</div></el-col>
     </el-row>
   </div>
 </template>
 <style scoped>
 img {
   width: 100%;
-  height: 300px;
+  height: 200px;
 }
 </style>
 <script>

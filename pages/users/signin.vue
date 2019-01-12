@@ -21,14 +21,22 @@
       </el-form-item>
       <el-form-item>
         <el-button
-          type="primary"
           @click="login('loginForm')">登录</el-button>
-        <el-button><router-link to="/users/signup">注册</router-link></el-button>
+        <el-button @click="toSignin">注册</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
-<style scoped>
+<style>
+.demo-loginForm {
+  width: 60%;
+  margin-top: 30px;
+}
+.el-button:focus,
+.el-button:hover {
+  color: white;
+  background-color: #ce4114;
+}
 </style>
 
 <script>
@@ -74,6 +82,11 @@ export default {
               }
             })
         }
+      })
+    },
+    toSignin: function() {
+      this.$router.push({
+        path: '/users/signup'
       })
     }
   }

@@ -3,7 +3,11 @@
     <el-col
       :span="4"
       class="rainbow">
-      <el-row class="item-category">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;木木家</el-row>
+      <el-row class="item-category">
+        <img
+          class="logo-img"
+          src="~/assets/images/logo.png"
+          alt=""></el-row>
       <hr>
       <el-row class="item-category">
         <img
@@ -85,6 +89,14 @@
 .rainbow {
   height: 450px;
   background-color: #ce4114;
+}
+.el-button {
+  color: white !important;
+}
+.logo-img {
+  margin: 25px;
+  height: 50px;
+  width: 130px;
 }
 </style>
 <script>

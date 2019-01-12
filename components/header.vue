@@ -7,7 +7,10 @@
             class="logolink"
             src="~/static/logo2.png"
             alt="">
-          <div class="logotext">木木<span class="color-red">家</span></div>
+          <img
+            class="logo-img"
+            src="~/assets/images/logo.png"
+            alt="">
         </a>
       </div>
       <div
@@ -34,7 +37,7 @@
             <i class="el-icon-arrow-down el-icon--right"/>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item><a :href="'/users/userCenter?_id='+userInfo._id">用户中心</a></el-dropdown-item>
+            <el-dropdown-item><a href="/users/userCenter">用户中心</a></el-dropdown-item>
             <el-dropdown-item divided><a href="/backup/categoryList">分类管理</a></el-dropdown-item>
             <el-dropdown-item><a href="/backup/LabelList">标签管理</a></el-dropdown-item>
             <el-dropdown-item><a href="/backup/itemTable">热门管理</a></el-dropdown-item>
@@ -58,6 +61,13 @@
   </div>
 </template>
 <style scoped>
+a {
+  color: #ce4114;
+}
+a:focus,
+a:hover {
+  color: #f79a29;
+}
 .header {
   width: 1400px;
   min-width: 500px;
@@ -86,11 +96,10 @@ img {
   width: 40px;
   height: 40px;
 }
-.logotext {
-  margin: 10px 0;
-  font-size: 30px;
-  color: black;
-  float: right;
+.logo-img {
+  margin: 10px;
+  width: 120px;
+  height: 40px;
 }
 .el-dropdown {
   float: right;

@@ -259,6 +259,13 @@
   font-weight: 700;
   word-break: break-all;
 }
+a {
+  color: #ce4114;
+}
+a:focus,
+a:hover {
+  color: #f79a29;
+}
 </style>
 <script>
 export default {

@@ -4,7 +4,8 @@
       ref="updateForm"
       :model="updateForm"
       :rules="updateFormRule"
-      label-width="80px">
+      label-width="80px"
+      class="demo-ruleForm">
       <el-form-item label="邮箱">
         <el-input
           :disabled="true"
@@ -98,14 +99,14 @@
       </el-form-item>
       <el-form-item>
         <el-button
-          type="primary"
           @click="updateUser">更新</el-button>
-        <el-button @click="cancel">取消</el-button>
+        <el-button
+          @click="cancel">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
-<style scoped>
+<style>
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
@@ -129,6 +130,10 @@
   height: 178px;
   display: block;
 }
+.demo-ruleForm {
+  width: 60%;
+  margin-top: 30px;
+}
 </style>
 
 <script>
@@ -137,13 +142,13 @@ export default {
     return {
       updateForm: {},
       updateFormRule: {
-        photo: [{ required: true, message: '请上传头像' }],
-        province: [{ required: true, message: '请输入省份' }],
-        city: [{ required: true, message: '请上输入城市' }],
-        birthday: [{ required: true, message: '请输入生日' }],
-        constellation: [{ required: true, message: '请输入星座' }],
-        sex: [{ required: true, message: '请输入性别' }],
-        introduce: [{ required: true, message: '请输介绍' }]
+        //photo: [{ required: true, message: '请上传头像' }],
+        // province: [{ required: true, message: '请输入省份' }],
+        //city: [{ required: true, message: '请上输入城市' }],
+        //birthday: [{ required: true, message: '请输入生日' }],
+        //constellation: [{ required: true, message: '请输入星座' }],
+        //sex: [{ required: true, message: '请输入性别' }],
+        //introduce: [{ required: true, message: '请输介绍' }]
       }
     }
   },
