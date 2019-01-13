@@ -11,23 +11,30 @@
       <el-table-column
         prop="labelname"
         label="标题"
-        width="180"/>
+        align="center"/>
       <el-table-column
         prop="sort"
         label="排序"
-        width="180"/>
+        align="center"
+        width="50"/>
       <el-table-column
         prop="create"
+        width="300"
+        align="center"
         label="创建日期"/>
       <el-table-column
         prop="update"
+        width="300"
+        align="center"
         label="最后更新"/>
       <el-table-column
         prop="active"
         label="状态"
-        width="180"/>
+        align="center"
+        width="50"/>
       <el-table-column
-        align="right">
+        label="操作"
+        align="center">
         <template
           slot="header"
           slot-scope="slot">

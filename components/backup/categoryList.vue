@@ -11,26 +11,33 @@
       <el-table-column
         prop="categoryname"
         label="标题"
-        width="180"/>
+        align="center"/>
       <el-table-column
         prop="sort"
         label="排序"
-        width="180"/>
+        align="center"
+        width="150"/>
       <el-table-column
         prop="create"
+        width="300"
+        align="center"
         label="创建日期"/>
       <el-table-column
         prop="update"
+        width="300"
+        align="center"
         label="最后更新"/>
       <el-table-column
         prop="active"
         label="状态"
+        align="center"
         width="180"/>
       <el-table-column
-        align="right">
+        width="180"
+        align="center">
         <template
           slot="header"
-          slot-scope="slot">
+          slot-scope="scope">
           <el-input
             v-model="search"
             size="mini"
@@ -97,6 +104,7 @@
 export default {
   data() {
     return {
+      search: '',
       tableData: [],
       addCategoryDialog: false,
       addCategoryForm: {},

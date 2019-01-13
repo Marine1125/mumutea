@@ -252,7 +252,6 @@ router.get('/getUserById', async ctx => {
 })
 
 router.post('/userUpdate', async ctx => {
-  console.log(ctx.request.body)
   const {
     _id,
     photo,
@@ -274,6 +273,50 @@ router.post('/userUpdate', async ctx => {
         constellation,
         sex,
         introduce
+      }
+    }
+  )
+  if (result) {
+    ctx.body = {
+      code: 0,
+      data: result
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      msg: '更新失败'
+    }
+  }
+})
+
+router.get('/getUserList', async ctx => {
+  let limit = parseInt(ctx.query.limit ? ctx.query.limit : 20)
+  let offset = parseInt(ctx.query.offset ? ctx.query.offset : 0)
+  let username = ctx.query.username ? ctx.query.username : ''
+  let results = await User.find({ username: { $regex: username } })
+    .limit(limit)
+    .skip(offset)
+  if (results.length > 0) {
+    ctx.body = {
+      code: 0,
+      msg: '',
+      data: results
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      msg: '获取数据失败',
+      data: ''
+    }
+  }
+})
+router.post('/updateRole', async ctx => {
+  const { _id, role } = ctx.request.body
+  const result = await User.updateOne(
+    { _id },
+    {
+      $set: {
+        role
       }
     }
   )

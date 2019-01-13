@@ -18,31 +18,24 @@
         class="header-right">
         <a
           href="/exit"
-          class="floatright">登出</a>
-        <el-dropdown
+          class="floatright content-center"
+          style="height: 40px;">登出</a>
+        <a
+          href="/users/userCenter"
           trigger="click"
-          class="floatright">
-          <span class="el-dropdown-link color-red">
-            <img
-              v-if="userInfo.photo"
-              :src="userInfo.photo"
-              class="user-photo"
-              alt="">
-            <img
-              v-else
-              src="~/assets/images/no-photo.jpg"
-              class="user-photo"
-              alt="">
-            <span>你好！{{ userInfo.username }}</span>
-            <i class="el-icon-arrow-down el-icon--right"/>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item><a href="/users/userCenter">用户中心</a></el-dropdown-item>
-            <el-dropdown-item divided><a href="/backup/categoryList">分类管理</a></el-dropdown-item>
-            <el-dropdown-item><a href="/backup/LabelList">标签管理</a></el-dropdown-item>
-            <el-dropdown-item><a href="/backup/itemTable">热门管理</a></el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+          class="floatright content-center">
+          <img
+            v-if="userInfo.photo"
+            :src="userInfo.photo"
+            class="user-photo"
+            alt="">
+          <img
+            v-else
+            src="~/assets/images/no-photo.jpg"
+            class="user-photo"
+            alt="">
+          <span class="">你好！{{ userInfo.username }}</span>
+        </a>
 
       </div>
       <div
@@ -50,10 +43,12 @@
         class="header-right">
         <a
           href="/users/signup"
-          class="floatright">注册</a>
+          class="floatright content-center"
+          style="height: 40px;">注册</a>
         <a
           href="/users/signin"
-          class="floatright">立即登录</a>
+          class="floatright content-center"
+          style="height: 40px;">立即登录</a>
 
       </div>
       <div class="line"/>
@@ -76,7 +71,7 @@ a:hover {
 }
 
 .header-right a {
-  margin: 20px;
+  margin: 10px;
 }
 .floatright {
   float: right;
@@ -100,16 +95,6 @@ img {
   margin: 10px;
   width: 120px;
   height: 40px;
-}
-.el-dropdown {
-  float: right;
-  margin: 10px;
-  color: #409eff;
-}
-.el-dropdown-link {
-  display: flex;
-  align-items: center;
-  align-content: center;
 }
 .user-photo {
   height: 40px;

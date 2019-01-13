@@ -61,7 +61,7 @@ router.post('/deleteFollow', async (ctx, next) => {
 router.get('/isFollow', async (ctx, next) => {
   const userid = ctx.query.userid
   let fansid = ''
-  if (!ctx.session.passport.user) {
+  if (!ctx.session.passport) {
     ctx.body = {
       code: -1,
       msg: '未登录'
