@@ -220,25 +220,35 @@ export default {
           ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
         }
       })
-    await ctx.$axios
-      .get('/fans/isFollow', {
-        params: {
-          userid: userInfo._id
+
+    await ctx.$axios.get('/users/getLoginUser').then(resp => {
+      if (resp.status === 200) {
+        if (resp.data && resp.data.code === 0) {
+          ctx.$axios
+            .get('/fans/isFollow', {
+              params: {
+                userid: userInfo._id
+              }
+            })
+            .then(resp => {
+              if (resp.status === 200) {
+                if (resp.data && resp.data.code === 0) {
+                  if (resp.data.data) {
+                    isFollow = true
+                  }
+                } else {
+                  //ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
+                }
+              } else {
+                //ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
+              }
+            })
         }
-      })
-      .then(resp => {
-        if (resp.status === 200) {
-          if (resp.data && resp.data.code === 0) {
-            if (resp.data.data) {
-              isFollow = true
-            }
-          } else {
-            //ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-          }
-        } else {
-          //ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-        }
-      })
+      } else {
+        self.$message.error('服务器内部错误，错误码：' + resp.status)
+      }
+    })
+
     await ctx.$axios
       .get('/items/getItemsByCreator', {
         params: {

@@ -73,7 +73,7 @@ export default {
               console.log(resp)
               if (resp.status == 200) {
                 if (resp.data && resp.data.code === 0) {
-                  self.$router.push('/')
+                  self.$router.back()
                 } else {
                   self.error = data.msg
                 }
