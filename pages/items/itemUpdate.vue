@@ -17,7 +17,6 @@
         prop="filename">
         <el-upload
           :on-success="filenameUploadSuccess"
-          :limit="1"
           :show-file-list="false"
           drag
           class="upload-demo"
@@ -378,7 +377,7 @@ export default {
     await self.$axios.get('/labels/getlabelList', self.itemForm).then(resp => {
       if (resp.status === 200) {
         if (resp.data && resp.data.code === 0) {
-          self.labels = resp.data.data
+          self.labels = resp.data.data.results
         } else {
         }
       } else {

@@ -17,7 +17,6 @@
         prop="filename">
         <el-upload
           :on-success="filenameUploadSuccess"
-          :limit="1"
           :show-file-list="false"
           drag
           class="upload-demo"
@@ -362,7 +361,7 @@ export default {
     this.$axios.get('/labels/getlabelList', self.itemForm).then(resp => {
       if (resp.status === 200) {
         if (resp.data && resp.data.code === 0) {
-          self.labels = resp.data.data
+          self.labels = resp.data.data.results
         } else {
         }
       } else {
@@ -431,7 +430,7 @@ export default {
                     })
                 }
                 setTimeout(function() {
-                  self.$router.push('/user/userCenter')
+                  self.$router.push('/users/userCenter')
                 }, 3000)
               } else {
                 this.$message.error(resp.data.msg)
