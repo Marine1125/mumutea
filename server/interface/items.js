@@ -229,12 +229,54 @@ router.post('/reviewItem', async (ctx, next) => {
   }
 })
 
-router.get('/getAllItems', async (ctx, next) => {
-  let items = await Item.find()
-  if (items) {
+router.get('/getItemList', async (ctx, next) => {
+  let results = {}
+  let limit = parseInt(ctx.query.limit ? ctx.query.limit : 20)
+  let offset = parseInt(ctx.query.offset ? ctx.query.offset : 0)
+  let title = ctx.query.title ? ctx.query.title : ''
+  let status = ctx.query.status ? ctx.query.status : ''
+  let ishot = ctx.query.ishot ? ctx.query.ishot : ''
+  let category = ctx.query.category ? ctx.query.category : ''
+  let creator = ctx.query.creator ? ctx.query.creator : ''
+  if (creator) {
+    let result = await User.findOne({
+      username: creator
+    })
+    if (result) {
+      creator = result._id
+    }
+  }
+  let count = await Item.countDocuments({
+    title: { $regex: title },
+    status: { $regex: status },
+    category: { $regex: category },
+    creator: { $regex: creator },
+    ishot: { $regex: ishot }
+  })
+  if (count > 0) {
+    results = await Item.find({
+      title: { $regex: title },
+      status: { $regex: status },
+      category: { $regex: category },
+      creator: { $regex: creator },
+      ishot: { $regex: ishot }
+    })
+      .limit(limit)
+      .skip(offset)
+      .lean()
+    for (let i = 0; i < results.length; i++) {
+      let creator = results[i].creator
+      let result = await User.findOne({ _id: creator })
+      if (result) {
+        results[i].creator = result.username
+      }
+      results[i].create = new Date(results[i].create).toLocaleDateString()
+    }
+  }
+  if (results.length > 0) {
     ctx.body = {
       code: 0,
-      data: items,
+      data: { count, results },
       msg: ''
     }
   } else {

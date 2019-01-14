@@ -5,7 +5,7 @@
       :model="queryForm"
       class="demo-form-inline">
       <el-form-item label="用户名">
-        <el-input v-model="queryForm.user"/>
+        <el-input v-model="queryForm.username"/>
       </el-form-item>
       <el-form-item label="邮箱">
         <el-input v-model="queryForm.email"/>
@@ -25,11 +25,11 @@
       <el-form-item>
         <el-button
           type="primary"
-          @click="getUserList">查询</el-button>
+          @click="queryUser">查询</el-button>
       </el-form-item>
     </el-form>
     <el-table
-      :data="tableData"
+      :data="tableData.results"
       stripe
       style="width: 100%">
       <el-table-column
@@ -55,7 +55,7 @@
         align="center"
         width="200"/>
       <el-table-column
-        label="审核"
+        label="操作"
         align="center"
         width="250">
         <template slot-scope="scope">
@@ -73,10 +73,14 @@
       </el-table-column>
     </el-table>
     <el-pagination
-      :total="1000"
+      :total="tableData.count"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="queryForm.limit"
       class="pagination float-right"
       background
-      layout="prev, pager, next"/>
+      layout="total, sizes, prev, pager, next, jumper"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"/>
   </div>
 </template>
 <style scoped>
@@ -88,11 +92,13 @@
 export default {
   data() {
     return {
-      tableData: [],
+      tableData: {},
       queryForm: {
         username: '',
         email: '',
-        role: ''
+        role: '',
+        limit: 10,
+        offset: 0
       }
     }
   },
@@ -103,13 +109,34 @@ export default {
     })
   },
   methods: {
+    handleSizeChange(val) {
+      this.queryForm.limit = val
+      const self = this
+      this.getUserList().then(data => {
+        self.tableData = data
+      })
+    },
+    handleCurrentChange(val) {
+      this.queryForm.offset =
+        (parseInt(val) - 1) * parseInt(this.queryForm.limit)
+      const self = this
+      this.getUserList().then(data => {
+        self.tableData = data
+      })
+    },
     getUserList: async function() {
       const self = this
       let result = await this.$axios
-        .get('/users/getUserList')
-        .then(resp => resp.data.data)
-      console.log(result)
-      return result
+        .get('/users/getUserList', { params: self.queryForm })
+        .then(resp => resp.data)
+      return result.code === 0 ? result.data : { count: 0, results: [] }
+    },
+    queryUser: function() {
+      const self = this
+      self.queryForm.offset = 0
+      this.getUserList().then(data => {
+        self.tableData = data
+      })
     },
     formatRole: function(row, column) {
       if (row.role == '0') {
@@ -123,16 +150,27 @@ export default {
     },
     updateRole: async function(index, row, role) {
       const self = this
-      row.role = role
-      await self.$axios.post('/users/updateRole', row).then(resp => {
-        if (resp.status === 200) {
-          if (resp.data && resp.data.code === 0) {
-            if (resp.data.data.length) {
-              //self.tableData = resp.data.data
-            }
-          }
-        }
+      this.$confirm('确定执行此操作吗', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
+        .then(async () => {
+          row.role = role
+          await self.$axios.post('/users/updateRole', row).then(resp => {
+            if (resp.status === 200) {
+              if (resp.data && resp.data.code === 0) {
+                if (resp.data.data.length) {
+                  self.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                  })
+                }
+              }
+            }
+          })
+        })
+        .catch(() => {})
     }
   }
 }

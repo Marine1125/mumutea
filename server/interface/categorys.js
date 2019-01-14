@@ -92,11 +92,37 @@ router.post('/activeCategory', async (ctx, next) => {
 })
 
 router.get('/getCategoryList', async (ctx, next) => {
-  let categoryList = await Category.find().sort({ sort: 1 })
-  if (categoryList) {
+  let results = {}
+  let limit = parseInt(ctx.query.limit ? ctx.query.limit : 20)
+  let offset = parseInt(ctx.query.offset ? ctx.query.offset : 0)
+  let categoryname = ctx.query.categoryname ? ctx.query.categoryname : ''
+  let active = ctx.query.active ? ctx.query.active : ''
+  let count = await Category.countDocuments({
+    categoryname: { $regex: categoryname },
+    active: { $regex: active }
+  })
+  if (count > 0) {
+    results = await Category.find({
+      categoryname: { $regex: categoryname },
+      active: { $regex: active }
+    })
+      .sort({ sort: 1 })
+      .limit(limit)
+      .skip(offset)
+      .lean()
+    for (let i = 0; i < results.length; i++) {
+      results[i].create = new Date(results[i].create).toLocaleDateString()
+      results[i].update = new Date(results[i].update).toLocaleDateString()
+    }
+  }
+
+  if (results.length > 0) {
     ctx.body = {
       code: 0,
-      data: categoryList
+      data: {
+        count,
+        results
+      }
     }
   } else {
     ctx.body = {

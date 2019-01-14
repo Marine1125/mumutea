@@ -1,11 +1,34 @@
 <template>
   <div class="content">
-    <div style="margin-top: 20px">
-      <el-button @click="addCategoryDialog = true">新增</el-button>
-      <el-button @click="refresh()">刷新</el-button>
-    </div>
+    <el-form
+      :inline="true"
+      :model="queryForm"
+      class="demo-form-inline">
+      <el-form-item label="标题">
+        <el-input v-model="queryForm.categoryname"/>
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-select
+          v-model="queryForm.active"
+          placeholder="请选择">
+          <el-option
+            label="激活"
+            value="1"/>
+          <el-option
+            label="去激活"
+            value="0"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          @click="queryCategory">查询</el-button>
+        <el-button @click="addCategoryDialog = true">新增</el-button>
+        <el-button @click="refresh()">刷新</el-button>
+      </el-form-item>
+    </el-form>
     <el-table
-      :data="tableData"
+      :data="tableData.results"
       stripe
       style="width: 100%">
       <el-table-column
@@ -34,15 +57,8 @@
         width="180"/>
       <el-table-column
         width="180"
+        label="操作"
         align="center">
-        <template
-          slot="header"
-          slot-scope="scope">
-          <el-input
-            v-model="search"
-            size="mini"
-            placeholder="Type to search"/>
-        </template>
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.active == '1'"
@@ -62,6 +78,15 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      :total="tableData.count"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="queryForm.limit"
+      class="pagination float-right"
+      background
+      layout="total, sizes, prev, pager, next, jumper"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"/>
     <el-dialog
       :visible.sync="addCategoryDialog"
       title="提示"
@@ -99,13 +124,22 @@
 .content {
   margin-top: 30px;
 }
+.pagination {
+  margin-top: 20px;
+}
 </style>
 <script>
 export default {
   data() {
     return {
       search: '',
-      tableData: [],
+      tableData: {},
+      queryForm: {
+        categoryname: '',
+        active: '',
+        limit: 10,
+        offset: 0
+      },
       addCategoryDialog: false,
       addCategoryForm: {},
       categoryRules: {
@@ -133,17 +167,40 @@ export default {
   },
   mounted: async function() {
     const self = this
-    await self.$axios.get('/categorys/getCategoryList').then(resp => {
-      if (resp.status === 200) {
-        if (resp.data && resp.data.code === 0) {
-          if (resp.data.data.length) {
-            self.tableData = resp.data.data
-          }
-        }
-      }
+    self.getCategoryList().then(data => {
+      self.tableData = data
     })
   },
   methods: {
+    handleSizeChange(val) {
+      this.queryForm.limit = val
+      const self = this
+      this.getCategoryList().then(data => {
+        self.tableData = data
+      })
+    },
+    handleCurrentChange(val) {
+      this.queryForm.offset =
+        (parseInt(val) - 1) * parseInt(this.queryForm.limit)
+      const self = this
+      this.getCategoryList().then(data => {
+        self.tableData = data
+      })
+    },
+    getCategoryList: async function() {
+      const self = this
+      let result = await self.$axios
+        .get('/categorys/getCategoryList', { params: self.queryForm })
+        .then(resp => resp.data)
+      return result.code === 0 ? result.data : { count: 0, results: [] }
+    },
+    queryCategory: function() {
+      const self = this
+      self.queryForm.offset = 0
+      this.getCategoryList().then(data => {
+        self.tableData = data
+      })
+    },
     deleteCategory: async function(index, row) {
       const self = this
       await self.$axios.post('/categorys/deleteCategory', row).then(resp => {

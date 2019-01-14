@@ -92,11 +92,37 @@ router.post('/activeLabel', async (ctx, next) => {
 })
 
 router.get('/getLabelList', async (ctx, next) => {
-  let labelList = await Label.find().sort({ sort: 1 })
-  if (labelList) {
+  let results = {}
+  let limit = parseInt(ctx.query.limit ? ctx.query.limit : 20)
+  let offset = parseInt(ctx.query.offset ? ctx.query.offset : 0)
+  let labelname = ctx.query.labelname ? ctx.query.labelname : ''
+  let active = ctx.query.active ? ctx.query.active : ''
+  let count = await Label.countDocuments({
+    labelname: { $regex: labelname },
+    active: { $regex: active }
+  })
+  if (count > 0) {
+    results = await Label.find({
+      labelname: { $regex: labelname },
+      active: { $regex: active }
+    })
+      .sort({ sort: 1 })
+      .limit(limit)
+      .skip(offset)
+      .lean()
+    for (let i = 0; i < results.length; i++) {
+      results[i].create = new Date(results[i].create).toLocaleDateString()
+      results[i].update = new Date(results[i].update).toLocaleDateString()
+    }
+  }
+
+  if (results.length > 0) {
     ctx.body = {
       code: 0,
-      data: labelList
+      data: {
+        count,
+        results
+      }
     }
   } else {
     ctx.body = {

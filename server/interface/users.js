@@ -290,17 +290,39 @@ router.post('/userUpdate', async ctx => {
 })
 
 router.get('/getUserList', async ctx => {
+  let results = {}
   let limit = parseInt(ctx.query.limit ? ctx.query.limit : 20)
   let offset = parseInt(ctx.query.offset ? ctx.query.offset : 0)
   let username = ctx.query.username ? ctx.query.username : ''
-  let results = await User.find({ username: { $regex: username } })
-    .limit(limit)
-    .skip(offset)
+  let email = ctx.query.email ? ctx.query.email : ''
+  let role = ctx.query.role ? ctx.query.role : ''
+  let count = await User.countDocuments({
+    username: { $regex: username },
+    email: { $regex: email },
+    role: { $regex: role }
+  })
+  if (count > 0) {
+    results = await User.find({
+      username: { $regex: username },
+      email: { $regex: email },
+      role: { $regex: role }
+    })
+      .limit(limit)
+      .skip(offset)
+      .lean()
+    for (let i = 0; i < results.length; i++) {
+      results[i].create = new Date(results[i].create).toLocaleDateString()
+    }
+  }
+
   if (results.length > 0) {
     ctx.body = {
       code: 0,
       msg: '',
-      data: results
+      data: {
+        count,
+        results
+      }
     }
   } else {
     ctx.body = {

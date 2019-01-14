@@ -85,3 +85,7 @@ body {
   font-size: 20px;
   font-weight: 1000;
 }
+
+.pagination {
+  margin-top: 20px;
+}

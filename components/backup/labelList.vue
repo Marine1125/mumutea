@@ -1,12 +1,34 @@
 <template>
   <div class="content">
-    <div style="margin-top: 20px">
-      <el-button @click="addLabelDialog = true">新增</el-button>
-      <el-button @click="refresh()">刷新</el-button>
-    </div>
+    <el-form
+      :inline="true"
+      :model="queryForm"
+      class="demo-form-inline">
+      <el-form-item label="标题">
+        <el-input v-model="queryForm.labelname"/>
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-select
+          v-model="queryForm.active"
+          placeholder="请选择">
+          <el-option
+            label="激活"
+            value="1"/>
+          <el-option
+            label="去激活"
+            value="0"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          @click="queryLabel">查询</el-button>
+        <el-button @click="addLabelDialog = true">新增</el-button>
+        <el-button @click="refresh()">刷新</el-button>
+      </el-form-item>
+    </el-form>
     <el-table
-      :data="tableData"
-      stripe
+      :data="tableData.results"
       style="width: 100%">
       <el-table-column
         prop="labelname"
@@ -62,6 +84,15 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      :total="tableData.count"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="queryForm.limit"
+      class="pagination float-right"
+      background
+      layout="total, sizes, prev, pager, next, jumper"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"/>
     <el-dialog
       :visible.sync="addLabelDialog"
       title="提示"
@@ -101,7 +132,13 @@
 export default {
   data() {
     return {
-      tableData: [],
+      tableData: {},
+      queryForm: {
+        labelname: '',
+        active: '',
+        limit: 10,
+        offset: 0
+      },
       addLabelDialog: false,
       addLabelForm: {},
       labelRules: {
@@ -129,17 +166,40 @@ export default {
   },
   mounted: async function() {
     const self = this
-    await self.$axios.get('/labels/getLabelList').then(resp => {
-      if (resp.status === 200) {
-        if (resp.data && resp.data.code === 0) {
-          if (resp.data.data.length) {
-            self.tableData = resp.data.data
-          }
-        }
-      }
+    self.getLabelList().then(data => {
+      self.tableData = data
     })
   },
   methods: {
+    handleSizeChange(val) {
+      this.queryForm.limit = val
+      const self = this
+      this.getLabelList().then(data => {
+        self.tableData = data
+      })
+    },
+    handleCurrentChange(val) {
+      this.queryForm.offset =
+        (parseInt(val) - 1) * parseInt(this.queryForm.limit)
+      const self = this
+      this.getLabelList().then(data => {
+        self.tableData = data
+      })
+    },
+    getLabelList: async function() {
+      const self = this
+      let result = await this.$axios
+        .get('/labels/getLabelList', { params: self.queryForm })
+        .then(resp => resp.data)
+      return result.code === 0 ? result.data : { count: 0, results: [] }
+    },
+    queryLabel: function() {
+      const self = this
+      self.queryForm.offset = 0
+      this.getLabelList().then(data => {
+        self.tableData = data
+      })
+    },
     deleteLabel: async function(index, row) {
       const self = this
       await self.$axios.post('/labels/deleteLabel', row).then(resp => {
