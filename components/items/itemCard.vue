@@ -29,9 +29,9 @@
               v-for="item in item.label"
               :key="item">{{ item }}</el-tag>
           </el-row>
-          <el-row style="color: #999; line-height:20px">{{ item.summary }}</el-row>
+          <el-row class="summary">{{ item.summary }}</el-row>
           <el-row>
-            <div class="bottom clearfix">
+            <div class="clearfix">
               <i class="mumuteaiconfont font-18 color-red">&#xe67b;</i>
               <span>{{ item.collectioncount }}</span>
               <a
@@ -61,6 +61,11 @@
 .card-img:hover {
   opacity: 0.9;
 }
+.summary {
+  color: #999;
+  height: 40px;
+  overflow: hidden;
+}
 .el-tag {
   background-color: #f79a29;
   margin: 0 2px;
@@ -80,7 +85,7 @@
   border-radius: 10px;
 }
 .el-row {
-  margin: 7px 0;
+  margin-top: 7px;
 }
 a {
   color: #ce4114;
