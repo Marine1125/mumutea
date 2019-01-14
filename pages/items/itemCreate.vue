@@ -351,7 +351,7 @@ export default {
     this.$axios.get('/categorys/getCategoryList', self.itemForm).then(resp => {
       if (resp.status === 200) {
         if (resp.data && resp.data.code === 0) {
-          self.categorys = resp.data.data
+          self.categorys = resp.data.data.results
         } else {
         }
       } else {
