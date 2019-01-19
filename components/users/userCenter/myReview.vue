@@ -22,19 +22,13 @@
             value="烘焙"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="作者">
-        <el-input v-model="queryForm.creator"/>
-      </el-form-item>
       <el-form-item label="审核状态">
         <el-select
           v-model="queryForm.status"
           placeholder="请选择">
           <el-option
             label="全部"
-            value="1,0,-1"/>
-          <el-option
-            label="通过"
-            value="1"/>
+            value="0,-1"/>
           <el-option
             label="审核中"
             value="0"/>
@@ -69,11 +63,6 @@
         align="center"
         width="150"/>
       <el-table-column
-        prop="creator"
-        label="作者"
-        align="center"
-        width="200"/>
-      <el-table-column
         prop="create"
         label="创建日期"
         align="center"
@@ -87,19 +76,25 @@
         align="center"
         width="150"/>
       <el-table-column
-        label="审核"
+        prop="reason"
+        label="原因"
+        align="center"
+        width="200"/>
+      <el-table-column
+        label="操作"
         align="center"
         width="250">
         <template slot-scope="scope">
           <el-button
-            v-if="scope.row.status == '0' || scope.row.status == '-1'"
+            v-if="scope.row.status == '-1'"
             size="mini"
             type="success"
-            @click="reviewItem(scope.$index, scope.row, '1')">通过</el-button>
+            @click="toEdit(scope.$index, scope.row, '1')">编辑</el-button>
           <el-button
+            v-if="scope.row.status == '-1'"
             size="mini"
             type="danger"
-            @click="showDialog(scope.$index, scope.row, '-1')">不通过</el-button>
+            @click="removeItem(scope.$index, scope.row, '-1')">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -112,46 +107,24 @@
       layout="total, sizes, prev, pager, next, jumper"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"/>
-    <el-dialog
-      :visible.sync="addReviewDialog"
-      title="提示"
-      width="30%"
-      center>
-      <el-form
-        ref="addReviewForm"
-        :model="addReviewForm"
-        :rules="reviewRules"
-        label-width="80px">
-        <el-form-item
-          label="原因"
-          prop="reason">
-          <el-input v-model="addReviewForm.reason"/>
-        </el-form-item>
-      </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer">
-        <el-button @click="addReview()">提 交</el-button>
-        <el-button
-          type="primary"
-          @click="addReviewDialog = false">取 消</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <style scoped>
 </style>
 <script>
 export default {
+  // eslint-disable-next-line vue/require-prop-types
+  props: ['userinfo'],
   data() {
     return {
       tableData: [],
       queryForm: {
         title: '',
-        status: '1,0,-1',
+        status: '0,-1',
         limit: 10,
         status: '',
-        offset: 0
+        offset: 0,
+        creator: ''
       },
       currentRow: '',
       addReviewDialog: false,
@@ -192,7 +165,10 @@ export default {
     },
     getItemList: async function() {
       const self = this
-
+      self.queryForm.creator = self.userinfo._id
+      if (self.queryForm.status == '') {
+        self.queryForm.status = '0,-1'
+      }
       let result = await this.$axios
         .get('/items/getItemList', { params: self.queryForm })
         .then(resp => resp.data)
@@ -217,53 +193,33 @@ export default {
     filterStatus: function(value, row) {
       return row.status === value
     },
-    reviewItem: async function(index, row, status) {
-      const self = this
-      row.status = status
-      await self.$axios.post('/items/reviewItem', row).then(resp => {
-        if (resp.status === 200) {
-          if (resp.data && resp.data.code === 0) {
-            if (resp.data.data.length) {
-              //self.tableData = resp.data.data
-            }
-          }
-        }
+    toEdit: function(index, row, status) {
+      this.$router.push({ path: '/items/itemUpdate', query: { _id: row._id } })
+    },
+    removeItem: async function(index, row, status) {
+      this.$confirm('此操作将永久删除该内容, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
-    },
-    showDialog: function(index, row, status) {
-      this.addReviewDialog = true
-      this.currentRow = row
-      this.currentRow.status = status
-    },
-    addReview: async function() {
-      const self = this
-      await self.$axios
-        .post('/reviews/addReview', {
-          itemid: self.currentRow._id,
-          result: self.currentRow.status,
-          reason: self.addReviewForm.reason
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              if (resp.data.data.length) {
-                //self.tableData = resp.data.data
+        .then(() => {
+          const self = this
+          self.$axios.post('/items/removeItem', { _id: row._id }).then(resp => {
+            if (resp.status === 200) {
+              if (resp.data && resp.data.code === 0) {
+                self.$message({
+                  message: '删除成功',
+                  type: 'success'
+                })
+              } else {
+                self.$message.error(resp.data.msg)
               }
+            } else {
+              self.$message.error('服务器内部错误，错误码：' + resp.status)
             }
-          }
+          })
         })
-      await self.$axios
-        .post('/items/reviewItem', this.currentRow)
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              if (resp.data.data.length) {
-                //self.tableData = resp.data.data
-              }
-            }
-          }
-        })
-      this.addReviewDialog = false
+        .catch(() => {})
     }
   }
 }

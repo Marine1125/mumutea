@@ -14,6 +14,7 @@ import hots from './interface/hots'
 import fans from './interface/fans'
 import collections from './interface/collections'
 import draft from './interface/drafts'
+import reviews from './interface/reviews'
 import utils from './utils/upload'
 
 const consola = require('consola')
@@ -69,6 +70,7 @@ async function start() {
   app.use(collections.routes()).use(collections.allowedMethods())
   app.use(utils.routes()).use(utils.allowedMethods())
   app.use(draft.routes()).use(draft.allowedMethods())
+  app.use(reviews.routes()).use(reviews.allowedMethods())
   app.use(ctx => {
     ctx.status = 200 // koa defaults to 404 when it sees that status is unset
 

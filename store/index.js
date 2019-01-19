@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import index from './modules/index'
 import item from './modules/item'
+import user from './modules/user'
 
 Vue.use(Vuex)
 
@@ -9,7 +10,8 @@ const store = () =>
   new Vuex.Store({
     modules: {
       index,
-      item
+      item,
+      user
     },
     actions: {
       async nuxtServerInit({ commit }, { req, app }) {

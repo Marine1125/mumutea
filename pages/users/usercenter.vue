@@ -50,229 +50,22 @@
         @tab-click="handleClick">
         <el-tab-pane
           label="我的厨房"
-          name="厨房">
-          <el-row :gutter="20">
-            <el-col
-              v-for="(cookData,index) in myItems"
-              :span="6"
-              :key="'cook'+ index">
-              <el-card :body-style="{ padding: '0px' }">
-                <a :href="'/items/itemDetail?id='+cookData._id">
-                  <img
-                    :src="cookData.filename"
-                    class="image">
-                </a>
-                <div style="padding: 14px;">
-                  <a :href="'/items/itemDetail?id='+cookData._id">{{ cookData.title }}</a>
-                  <time class="time float-right ">{{ cookData.create }}</time>
-                  <div class="bottom clearfix">
-                    <i class="mumuteaiconfont font-18 color-red">&#xe67b;</i>
-                    <span>{{ cookData.collectioncount }}</span>
-                    <a
-                      href="javascript:;"
-                      class="float-right"
-                      @click="removeItem(cookData._id)">删除</a>
-                    <a
-                      href="javascript:;"
-                      class="float-right"
-                      style="margin-right:10px"
-                      @click="toEdit(cookData._id)">编辑</a>
-
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-            <el-col
-              :span="6"
-              style="margin-bottom:10px">
-              <el-card
-                :body-style="{ padding: '0px' }"
-                class="upload-content">
-                <a href="/items/itemCreate">
-                  <div class="image">
-                    <img
-                      class="image-add"
-                      src="~/assets/images/add.jpg"
-                      alt="">
-                  </div>
-                  <div style="padding: 14px;" >
-                    <div class="bottom clearfix">
-                      <span class="add-text font-18">创建美食</span>
-                    </div>
-                  </div>
-                </a>
-              </el-card>
-            </el-col>
-          </el-row>
-          <el-row>
-            <button
-              round
-              class="button page-button"
-              @click="getMoreItems">获取更多内容<i class="el-icon-arrow-down"/></button>
-          </el-row>
-        </el-tab-pane>
+          name="厨房"><myItems :userinfo="userInfo"/></el-tab-pane>
         <el-tab-pane
           label="我的粉丝"
-          name="粉丝">
-          <el-row :gutter="20">
-            <el-col
-              v-for="(fans,index) in myFans"
-              :span="6"
-              :key="index"
-              class="person-card">
-              <el-row :gutter="30">
-                <el-col :span="8">
-                  <img
-                    :src="fans.photo"
-                    class="fans-photo"
-                    alt="">
-                </el-col>
-                <el-col :span="16">
-                  <el-row>
-                    <a
-                      :href="'/users/mainPage?_id='+ fans._id"
-                      class="font-18">{{ fans.username }}</a>
-                  </el-row>
-                  <el-row>
-                    <span>{{ fans.sex }}</span>
-                    <span>&nbsp;&nbsp;&nbsp;</span>
-                    <span>{{ fans.constellation }}</span>
-                  </el-row>
-                  <el-row>生日：{{ fans.birthday }}</el-row>
-                  <el-row style="height:19px;overflow:hidden;">{{ fans.introduce }}</el-row>
-                  <el-row>粉丝：{{ fans.fanscount }}&nbsp;&nbsp;&nbsp;关注：{{ fans.followscount }}</el-row>
-                </el-col>
-
-              </el-row>
-            </el-col>
-          </el-row>
-          <el-row>
-            <button
-              round
-              class="button page-button"
-              @click="getMoreFans">获取更多内容<i class="el-icon-arrow-down"/></button>
-          </el-row>
-        </el-tab-pane>
+          name="粉丝"><myFans :userinfo="userInfo"/></el-tab-pane>
         <el-tab-pane
           label="我的关注"
-          name="关注">
-          <el-row :gutter="20">
-            <el-col
-              v-for="(follow,index) in myFollows"
-              :span="6"
-              :key="index">
-              <el-row :gutter="30">
-                <el-col :span="8">
-                  <img
-                    :src="follow.photo"
-                    class="fans-photo"
-                    alt="">
-                </el-col>
-                <el-col :span="16">
-                  <a
-                    :href="'/users/mainPage?_id='+ follow._id"
-                    class="font-18">{{ follow.username }}</a>
-                  <el-row>
-                    <span>{{ follow.sex }}</span>
-                    <span>&nbsp;&nbsp;&nbsp;</span>
-                    <span>{{ follow.constellation }}</span>
-                  </el-row>
-                  <el-row>生日：{{ follow.birthday }}</el-row>
-                  <el-row style="height:19px;overflow:hidden;">{{ follow.introduce }}</el-row>
-                  <el-row>粉丝：{{ follow.fanscount }}&nbsp;&nbsp;&nbsp;关注：{{ follow.followscount }}</el-row>
-                </el-col>
-
-              </el-row>
-            </el-col>
-          </el-row>
-          <el-row>
-            <button
-              round
-              class="button page-button"
-              @click="getMoreFollows">获取更多内容<i class="el-icon-arrow-down"/></button>
-          </el-row>
-        </el-tab-pane>
+          name="关注"><myFollows :userinfo="userInfo"/></el-tab-pane>
         <el-tab-pane
           label="我的收藏"
-          name="收藏">
-          <el-row :gutter="20">
-            <el-col
-              v-for="(collection,index) in myCollections"
-              :span="6"
-              :key="'cook'+ index">
-              <el-card :body-style="{ padding: '0px' }">
-                <a :href="'/items/itemDetail?id='+collection._id">
-                  <img
-                    :src="collection.filename"
-                    class="image">
-                </a>
-                <div style="padding: 14px;">
-                  <a :href="'/items/itemDetail?id='+collection._id">{{ collection.title }}</a>
-                  <time class="time float-right ">{{ collection.create }}</time>
-                  <div class="bottom clearfix">
-                    <i class="mumuteaiconfont font-18 color-red">&#xe67b;</i>
-                    <span>{{ collection.collectioncount }}</span>
-                    <a
-                      href="javascript:;"
-                      class="float-right"
-                      @click="deleteCollection(collection._id)">取消收藏</a>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-          <el-row>
-            <button
-              round
-              class="button page-button"
-              @click="getMoreCollections">获取更多内容<i class="el-icon-arrow-down"/></button>
-          </el-row>
-        </el-tab-pane>
+          name="收藏"><myCollections :userinfo="userInfo"/></el-tab-pane>
         <el-tab-pane
           label="我的草稿"
-          name="草稿">
-          <el-row :gutter="20">
-            <el-col
-              v-for="(draft,index) in myDrafts"
-              :span="6"
-              :key="'cook'+ index">
-              <el-card :body-style="{ padding: '0px' }">
-                <a :href="'/items/itemCreate?_id=' +draft._id">
-                  <img
-                    v-if="draft.filename"
-                    :src="draft.filename"
-                    class="image"
-                    alt="~/asset/images/np-imgae.png">
-                  <img
-                    v-else
-                    class="image"
-                    src="~/assets/images/no-image.png">
-                </a>
-                <div style="padding: 14px;">
-                  <span class="card-title">{{ draft.title?draft.title:'未命名' }}</span>
-                  <div class="bottom clearfix">
-                    <a
-                      class="float-right"
-                      style="margin:5px"
-                      href="javascript:;"
-                      @click="deleteDraft(draft._id)">删除</a>
-                    <a
-                      style="margin:5px"
-                      class="float-right"
-                      href="javascript:;"
-                      @click="editDraft(draft._id)">编辑</a>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-          <el-row>
-            <button
-              round
-              class="button page-button"
-              @click="getMoreCollections">获取更多内容<i class="el-icon-arrow-down"/></button>
-          </el-row>
-        </el-tab-pane>
+          name="草稿"><myDrafts :userinfo="userInfo"/></el-tab-pane>
+        <el-tab-pane
+          label="我的审核"
+          name="审核"><myReview :userinfo="userInfo"/></el-tab-pane>
       </el-tabs>
     </el-row>
   </div>
@@ -364,326 +157,42 @@ a:hover {
 }
 </style>
 <script>
+import myCollections from '@/components/users/userCenter/myCollections.vue'
+import myFans from '@/components/users/userCenter/myFans.vue'
+import myFollows from '@/components/users/userCenter/myFollows.vue'
+import myItems from '@/components/users/userCenter/myItems.vue'
+import myDrafts from '@/components/users/userCenter/myDrafts.vue'
+import myReview from '@/components/users/userCenter/myReview.vue'
 export default {
-  data() {
-    return {
-      category: '厨房',
-      userInfo: '',
-      myItems: [],
-      myFans: [],
-      myFollows: [],
-      myCollections: [],
-      myDrafts: [],
-      foodPageOffset: 8,
-      fansPageOffset: 8,
-      followPageOffset: 8,
-      collectionPageOffset: 8,
-      draftPageOffset: 8
-    }
+  components: {
+    myCollections,
+    myFans,
+    myFollows,
+    myItems,
+    myDrafts,
+    myReview
   },
-  async mounted() {
-    const _id = this.$route.query._id
-    const self = this
-    await self.$axios
-      .get('/users/getLoginUser', {
-        params: {
-          _id: _id
-        }
-      })
-      .then(resp => {
-        if (resp.status === 200) {
-          if (resp.data && resp.data.code === 0) {
-            self.userInfo = resp.data.data
-          } else {
-            self.$router.push({ path: '/users/signin' })
-          }
+  async asyncData(ctx) {
+    let userInfo = ''
+    await ctx.$axios.get('/users/getLoginUser').then(resp => {
+      if (resp.status === 200) {
+        if (resp.data && resp.data.code === 0) {
+          userInfo = resp.data.data
         } else {
-          self.$message.error(`服务器内部错误，错误码：${resp.status}`)
+          //console.log(ctx.app.router.VueRouter.push('/users/signin'))
+          ctx.redirect('/users/signin?from=/users/userCenter')
+          //ctx.app.router.VueRouter.push('/users/signin')
         }
-      })
-    await self.$axios
-      .get('/items/getItemsByCreator', {
-        params: {
-          creator: self.userInfo._id,
-          offset: 0,
-          limit: 7
-        }
-      })
-      .then(resp => {
-        if (resp.status === 200) {
-          if (resp.data && resp.data.code === 0) {
-            self.myItems = resp.data.data
-          } else {
-            ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-          }
-        } else {
-          ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-        }
-      })
-    await self.$axios
-      .get('/fans/getFansList', {
-        params: {
-          userid: self.userInfo._id,
-          offset: 0,
-          limit: 7
-        }
-      })
-      .then(resp => {
-        if (resp.status === 200) {
-          if (resp.data && resp.data.code === 0) {
-            self.myFans = resp.data.data
-          } else {
-            ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-          }
-        } else {
-          ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-        }
-      }),
-      await self.$axios
-        .get('/fans/getFollowList', {
-          params: {
-            userid: self.userInfo._id,
-            offset: 0,
-            limit: 8
-          }
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              self.myFollows = resp.data.data
-            } else {
-              ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-            }
-          } else {
-            ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-          }
-        }),
-      await self.$axios
-        .get('/collections/getCollectionList', {
-          params: {
-            userid: self.userInfo._id,
-            offset: 0,
-            limit: 8
-          }
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              self.myCollections = resp.data.data
-            } else {
-              ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-            }
-          } else {
-            ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-          }
-        }),
-      await self.$axios
-        .get('/drafts/getDraftList', {
-          params: {
-            userid: self.userInfo._id,
-            offset: 0,
-            limit: 8
-          }
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              self.myDrafts = resp.data.data
-            } else {
-              ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-            }
-          } else {
-            ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-          }
-        })
+      } else {
+        userInfo = ''
+        ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
+      }
+    })
+    return { userInfo, category: '厨房' }
   },
   methods: {
-    toEdit: function(id) {
-      this.$router.push({ path: '/items/itemUpdate', query: { _id: id } })
-    },
     handleClick(tab, event) {
       //console.log(tab, event)
-    },
-    addCollection: function(id) {
-      this.$message({
-        message: '成功收藏' + id,
-        type: 'success'
-      })
-    },
-    removeItem: async function(_id) {
-      this.$confirm('此操作将永久删除该内容, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          const self = this
-          self.$axios.post('/items/removeItem', { _id }).then(resp => {
-            if (resp.status === 200) {
-              if (resp.data && resp.data.code === 0) {
-                self.$message({
-                  message: '删除成功',
-                  type: 'success'
-                })
-              } else {
-                self.$message.error(resp.data.msg)
-              }
-            } else {
-              self.$message.error('服务器内部错误，错误码：' + resp.status)
-            }
-          })
-        })
-        .catch(() => {})
-    },
-    getMoreItems: async function() {
-      const self = this
-      await self.$axios
-        .get('/items/getItemsByCreator', {
-          params: {
-            creator: self.userInfo._id,
-            offset: self.foodPageOffset,
-            limit: 8
-          }
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              if (resp.data.data.length === 0) {
-                self.$message.error('没有更多内容啦！！！')
-              } else {
-                self.myItems = self.myItems.concat(resp.data.data)
-                self.foodPageOffset = self.foodPageOffset + 8
-              }
-            } else {
-              ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-            }
-          } else {
-            ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-          }
-        })
-    },
-    getMoreFans: async function() {
-      const self = this
-      await self.$axios
-        .get('/fans/getFansList', {
-          params: {
-            userid: self.userInfo._id,
-            offset: self.fansPageOffset,
-            limit: 8
-          }
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              if (resp.data.data.length === 0) {
-                self.$message.error('没有更多内容啦！！！')
-              } else {
-                self.myFans = self.myFans.concat(resp.data.data)
-                self.fansPageOffset = self.fansPageOffset + 8
-              }
-            } else {
-              ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-            }
-          } else {
-            ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-          }
-        })
-    },
-    getMoreFollows: async function() {
-      const self = this
-      await self.$axios
-        .get('/fans/getFollowList', {
-          params: {
-            userid: self.userInfo._id,
-            offset: self.followPageOffset,
-            limit: 8
-          }
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              if (resp.data.data.length === 0) {
-                self.$message.error('没有更多内容啦！！！')
-              } else {
-                self.myFollows = self.myFollows.concat(resp.data.data)
-                self.followsPageOffset = self.followsPageOffset + 8
-              }
-            } else {
-              ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-            }
-          } else {
-            ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-          }
-        })
-    },
-    getMoreCollections: async function() {
-      const self = this
-      await self.$axios
-        .get('/collections/getCollectionList', {
-          params: {
-            userid: self.userInfo._id,
-            offset: self.followPageOffset,
-            limit: 8
-          }
-        })
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              if (resp.data.data.length === 0) {
-                self.$message.error('没有更多内容啦！！！')
-              } else {
-                self.myCollections = self.myCollections.concat(resp.data.data)
-                self.collectionPageOffset = self.collectionPageOffset + 8
-              }
-            } else {
-              ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
-            }
-          } else {
-            ctx.$message.error(`服务器内部错误，错误码：${resp.status}`)
-          }
-        })
-    },
-    deleteCollection: async function(itemid) {
-      const self = this
-      self.$axios
-        .post('/collections/deleteCollection', { itemid })
-        .then(resp => {
-          if (resp.status === 200) {
-            if (resp.data && resp.data.code === 0) {
-              self.$message({
-                message: '取消收藏成功',
-                type: 'success'
-              })
-            } else {
-              self.$message.error(resp.data.msg)
-            }
-          } else {
-            self.$message.error('服务器内部错误，错误码：' + resp.status)
-          }
-        })
-    },
-    editDraft: function(draftid) {
-      this.$router.push({
-        path: '/items/itemCreate',
-        query: { _id: draftid }
-      })
-    },
-    deleteDraft: function(draftid) {
-      const self = this
-      self.$axios.post('/drafts/deleteDraft', { _id: draftid }).then(resp => {
-        if (resp.status === 200) {
-          if (resp.data && resp.data.code === 0) {
-            self.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-          } else {
-            self.$message.error(resp.data.msg)
-          }
-        } else {
-          self.$message.error('服务器内部错误，错误码：' + resp.status)
-        }
-      })
     }
   }
 }

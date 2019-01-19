@@ -45,6 +45,7 @@ export default {
   layout: 'signinlayout',
   data() {
     return {
+      routerFrom: this.$route.query.from,
       loginForm: {},
       loginRules: {
         username: [
@@ -73,7 +74,20 @@ export default {
               console.log(resp)
               if (resp.status == 200) {
                 if (resp.data && resp.data.code === 0) {
-                  self.$router.back()
+                  self.$message({
+                    message: '登录成功，页面即将跳转！',
+                    type: 'success'
+                  })
+                  console.error(self.routerFrom)
+                  if (self.routerFrom) {
+                    setTimeout(function() {
+                      self.$router.push(self.routerFrom)
+                    }, 2000)
+                  } else {
+                    setTimeout(function() {
+                      self.$router.go(-1)
+                    }, 2000)
+                  }
                 } else {
                   self.error = data.msg
                 }

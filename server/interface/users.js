@@ -92,6 +92,7 @@ router.post('/signin', async (ctx, next) => {
       if (user) {
         ctx.body = {
           code: 0,
+          data: user,
           msg: '登录成功'
         }
         return ctx.login(user)

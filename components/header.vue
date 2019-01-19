@@ -46,7 +46,7 @@
           class="floatright content-center"
           style="height: 40px;">注册</a>
         <a
-          href="/users/signin"
+          href="/users/signin?from=/"
           class="floatright content-center"
           style="height: 40px;">立即登录</a>
 
@@ -111,6 +111,7 @@ export default {
     }
   },
   async mounted() {
+    console.log('mounted')
     await this.$axios.get('/users/getLoginUser').then(resp => {
       if (resp.status === 200) {
         if (resp.data && resp.data.data) {

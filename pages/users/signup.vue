@@ -83,6 +83,7 @@
 <script>
 import CryptoJS from 'crypto-js'
 export default {
+  layout: 'signinlayout',
   data() {
     return {
       statusMsg: '',
@@ -217,7 +218,7 @@ export default {
                     type: 'success'
                   })
                   setTimeout(function() {
-                    self.$router.push('/users/signin')
+                    self.$router.push('/users/signin?from=/')
                   }, 3000)
                 } else {
                   self.$message.error(resp.data.msg)

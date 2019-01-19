@@ -4,6 +4,7 @@ import multer from 'koa-multer' //加载koa-multer模块
 import Item from '../dbs/models/items'
 import Collection from '../dbs/models/collections'
 import User from '../dbs/models/users'
+import Review from '../dbs/models/reviews'
 //文件上传
 
 let router = new Router({
@@ -234,7 +235,7 @@ router.get('/getItemList', async (ctx, next) => {
   let limit = parseInt(ctx.query.limit ? ctx.query.limit : 20)
   let offset = parseInt(ctx.query.offset ? ctx.query.offset : 0)
   let title = ctx.query.title ? ctx.query.title : ''
-  let status = ctx.query.status ? ctx.query.status : ''
+  let status = ctx.query.status ? ctx.query.status.split(',') : ['1', '0', '-1']
   let ishot = ctx.query.ishot ? ctx.query.ishot : ''
   let category = ctx.query.category ? ctx.query.category : ''
   let creator = ctx.query.creator ? ctx.query.creator : ''
@@ -248,7 +249,7 @@ router.get('/getItemList', async (ctx, next) => {
   }
   let count = await Item.countDocuments({
     title: { $regex: title },
-    status: { $regex: status },
+    status: { $in: status },
     category: { $regex: category },
     creator: { $regex: creator },
     ishot: { $regex: ishot }
@@ -256,7 +257,7 @@ router.get('/getItemList', async (ctx, next) => {
   if (count > 0) {
     results = await Item.find({
       title: { $regex: title },
-      status: { $regex: status },
+      status: { $in: status },
       category: { $regex: category },
       creator: { $regex: creator },
       ishot: { $regex: ishot }
@@ -266,6 +267,14 @@ router.get('/getItemList', async (ctx, next) => {
       .lean()
     for (let i = 0; i < results.length; i++) {
       let creator = results[i].creator
+      if (results[i].status == '-1') {
+        let reason = await Review.find({ itemid: results[i]._id })
+          .limit(1)
+          .sort({ create: -1 })
+        if (reason) {
+          results[i].reason = reason[0].reason
+        }
+      }
       let result = await User.findOne({ _id: creator })
       if (result) {
         results[i].creator = result.username
@@ -281,7 +290,8 @@ router.get('/getItemList', async (ctx, next) => {
     }
   } else {
     ctx.body = {
-      code: -1,
+      code: 0,
+      data: { count: '0', results: [] },
       msg: 'create error'
     }
   }
