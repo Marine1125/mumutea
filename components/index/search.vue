@@ -3,7 +3,7 @@
     <el-autocomplete
       v-model="keyword"
       :fetch-suggestions="querySearchAsync"
-      style="width: 100%; margin-bottom:5px;"
+      style="width: 100%; margin-bottom:5px;border-color:#ce4114"
       placeholder="请输入内容"
       @select="handleSelect"
     ><el-button
@@ -11,30 +11,15 @@
       icon="el-icon-search"
       class="search-button"
       @click="search"/></el-autocomplete>
-    <a
-      v-for="item in $store.state.item.hotItemList"
-      :key="item._id"
-      href="javascript:void(0)"
-      class="hot-link"
-      @click="goToList(item.title)">{{ item.title }}</a>
   </div>
 </template>
-<style scoped>
+<style>
 .search-button {
-  border: #ecf5ff;
+  background-color: #ce4114 !important;
+  color: #f79a29 !important;
 }
-.serach-input {
-  width: 40%;
-  margin: 30px 30px 10px 30%;
-}
-.el-button--text {
-  color: #ce4114;
-  background: 0 0;
-  padding-left: 0;
-  padding-right: 0;
-}
-.hot-link {
-  margin: 0 5px;
+el-input {
+  border-color: #ce4114 !important;
 }
 a {
   color: #ce4114;
@@ -98,7 +83,7 @@ export default {
         path: '/items/itemList',
         query: { keyword: item.value }
       })
-      this.$store.commit('item/setCategory', 'all')
+      this.$store.commit('item/setCategory', '全部')
     },
     goToList: function(title) {
       this.keyword = title
@@ -124,7 +109,7 @@ export default {
         data: { code: code1, data: data1 }
       } = await this.$axios.get('/items/getItems', {
         params: {
-          category: 'dish',
+          category: '美食',
           title: window.encodeURIComponent(this.$store.state.item.keyword)
         }
       })
@@ -136,7 +121,7 @@ export default {
         data: { data: data2 }
       } = await this.$axios.get('/items/getItems', {
         params: {
-          category: 'drink',
+          category: '饮品',
           title: window.encodeURIComponent(this.$store.state.item.keyword)
         }
       })
@@ -147,22 +132,11 @@ export default {
         data: { data: data3 }
       } = await this.$axios.get('/items/getItems', {
         params: {
-          category: 'bake',
+          category: '烘焙',
           title: window.encodeURIComponent(this.$store.state.item.keyword)
         }
       })
       this.$store.commit('item/setBakeItem', status3 === 200 ? data3 : [])
-
-      const {
-        status: status4,
-        data: { data: data4 }
-      } = await this.$axios.get('/items/getItems', {
-        params: {
-          category: 'handwork',
-          title: window.encodeURIComponent(this.$store.state.item.keyword)
-        }
-      })
-      this.$store.commit('item/setHandworkItem', status4 === 200 ? data4 : [])
 
       const {
         status: status5,

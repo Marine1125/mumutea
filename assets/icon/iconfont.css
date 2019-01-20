@@ -1,10 +1,11 @@
 @font-face {
   font-family: 'mumuteaiconfont';  /* project id 880731 */
-  src: url('//at.alicdn.com/t/font_880731_g0rcrythye.eot');
-  src: url('//at.alicdn.com/t/font_880731_g0rcrythye.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_880731_g0rcrythye.woff') format('woff'),
-  url('//at.alicdn.com/t/font_880731_g0rcrythye.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_880731_g0rcrythye.svg#mumuteaiconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_880731_2cg6lbn89tj.eot');
+  src: url('//at.alicdn.com/t/font_880731_2cg6lbn89tj.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_880731_2cg6lbn89tj.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_880731_2cg6lbn89tj.woff') format('woff'),
+  url('//at.alicdn.com/t/font_880731_2cg6lbn89tj.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_880731_2cg6lbn89tj.svg#mumuteaiconfont') format('svg');
 }
 
 .mumuteaiconfont {
@@ -23,3 +24,4 @@
 .mumuteaicon-zan:before { content: "\f1b4"; }
 
 .mumuteaicon-collection:before { content: "\f1b4"; }
+.mumuteaicon-roll:before { content: "\f1b4"; }

@@ -296,6 +296,33 @@ router.get('/getItemList', async (ctx, next) => {
     }
   }
 })
+router.get('/getItemCount', async (ctx, next) => {
+  let results = {}
+  let title = ctx.query.title ? ctx.query.title : ''
+  let status = ctx.query.status ? ctx.query.status.split(',') : ['1', '0', '-1']
+  let ishot = ctx.query.ishot ? ctx.query.ishot : ''
+  let category = ctx.query.category ? ctx.query.category : ''
+  let creator = ctx.query.creator ? ctx.query.creator : ''
+  let count = await Item.countDocuments({
+    title: { $regex: title },
+    status: { $in: status },
+    category: { $regex: category },
+    creator: { $regex: creator },
+    ishot: { $regex: ishot }
+  })
+  if (count >= 0) {
+    ctx.body = {
+      code: 0,
+      data: { count },
+      msg: ''
+    }
+  } else {
+    ctx.body = {
+      code: -1,
+      msg: 'getItemCount error'
+    }
+  }
+})
 router.post('/removeItem', async (ctx, next) => {
   const _id = ctx.request.body
   let result = await Item.remove({ _id })

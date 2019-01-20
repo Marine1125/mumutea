@@ -1,10 +1,6 @@
 <template>
   <div class="content">
-    <div>
-      <el-row><Search/></el-row>
-      <el-row><Carousel/>
-      </el-row>
-    </div>
+    <div><el-row><Carousel/></el-row></div>
     <el-row class="category">
       <el-col
         class="title">
@@ -215,11 +211,9 @@ a:hover {
 </style>
 <script>
 import Carousel from '../components/index/carousel.vue'
-import Search from '../components/index/search.vue'
 export default {
   components: {
-    Carousel,
-    Search
+    Carousel
   },
   data() {
     return {

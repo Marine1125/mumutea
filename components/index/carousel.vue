@@ -1,5 +1,5 @@
 <template>
-  <el-row >
+  <el-row :gutter="20">
     <el-col
       :span="4"
       class="rainbow">
@@ -38,9 +38,8 @@
       </el-row>
     </el-col>
     <el-col
-      :span="19"
-      :offset="1">
-      <el-carousel height="450px">
+      :span="16">
+      <el-carousel height="500px">
         <el-carousel-item
           v-for="item in $store.state.item.hotItemList"
           :key="item._id">
@@ -52,6 +51,10 @@
           <h3>{{ item.title }}</h3></a>
         </el-carousel-item>
       </el-carousel>
+    </el-col>
+    <el-col
+      :span="4">
+      <EatWhat/>
     </el-col>
   </el-row>
 </template>
@@ -72,7 +75,7 @@
 }
 .el-carousel__item img {
   width: 100%;
-  height: 450px;
+  height: 500px;
 }
 .el-carousel__item h3 {
   font-size: 30px;
@@ -87,7 +90,7 @@
   font-size: 25px;
 }
 .rainbow {
-  height: 450px;
+  height: 500px;
   background-color: #ce4114;
 }
 .el-button {
@@ -100,7 +103,11 @@
 }
 </style>
 <script>
+import EatWhat from '@/components/index/eatWhat.vue'
 export default {
+  components: {
+    EatWhat
+  },
   methods: {
     gouToMore: function(category) {
       this.$store.commit('item/setCategory', category)

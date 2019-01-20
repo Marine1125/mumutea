@@ -1,9 +1,6 @@
 <template>
   <div class="content">
-    <el-row>
-      <Search/>
-    </el-row>
-    <el-row :gutter="20">
+    <el-row :gutter="10">
       <el-col :span="20">
         <el-tabs
           v-model="category"
@@ -110,12 +107,10 @@
 }
 </style>
 <script>
-import Search from '../../components/index/search.vue'
 import Category from '../../components/items/category.vue'
 import Cards from '../../components/items/itemCard.vue'
 export default {
   components: {
-    Search,
     Category,
     Cards
   },

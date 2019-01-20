@@ -13,6 +13,7 @@
             alt="">
         </a>
       </div>
+
       <div
         v-if="userInfo"
         class="header-right">
@@ -51,6 +52,7 @@
           style="height: 40px;">立即登录</a>
 
       </div>
+      <div class="search-content"><Search/></div>
       <div class="line"/>
     </el-header>
   </div>
@@ -86,6 +88,11 @@ img {
 .logo-content {
   float: left;
 }
+.search-content {
+  width: 400px;
+  margin: 10px;
+  float: right;
+}
 .logolink {
   margin: 10px;
   width: 40px;
@@ -104,7 +111,11 @@ img {
 }
 </style>
 <script>
+import Search from '@/components/index/search.vue'
 export default {
+  components: {
+    Search
+  },
   data() {
     return {
       userInfo: ''
