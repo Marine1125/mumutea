@@ -79,6 +79,7 @@
               <a :href="'/items/itemDetail?id='+item._id">
                 <img
                   :src="item.filename"
+                  class="creator-img"
                   alt="">
               </a>
             </el-col>
@@ -98,11 +99,15 @@
   margin-bottom: 30px;
 }
 .side-content .el-row {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .side-img {
   width: 50%;
   height: 50%;
+}
+.creator-img {
+  width: 120px;
+  height: 90px;
 }
 .el-tag {
   background-color: #f79a29;

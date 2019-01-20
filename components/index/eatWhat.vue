@@ -51,6 +51,10 @@
 .el-row {
   margin: 5px;
 }
+.food-title {
+  width: 150px;
+  overflow: hidden;
+}
 .food-img {
   width: 200px;
   height: 118px;
@@ -92,6 +96,11 @@ export default {
         .then(resp => {
           if (resp.status === 200 && resp.data) {
             if (resp.data.code === 0) {
+              if (resp.data.data.results[0].title.length > 7) {
+                let title =
+                  resp.data.data.results[0].title.substring(0, 6) + '...'
+                resp.data.data.results[0].title = title
+              }
               self[food] = resp.data.data.results[0]
             }
           }
