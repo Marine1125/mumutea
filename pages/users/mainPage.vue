@@ -353,7 +353,7 @@ export default {
         .then(resp => {
           if (resp.status === 200) {
             if (resp.data && resp.data.code === 0) {
-              self.myFans = resp.data.data
+              self.myFans = resp.data.data.results
             } else {
               ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
             }
@@ -372,7 +372,7 @@ export default {
         .then(resp => {
           if (resp.status === 200) {
             if (resp.data && resp.data.code === 0) {
-              self.myFollows = resp.data.data
+              self.myFollows = resp.data.data.results
             } else {
               ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
             }
@@ -475,10 +475,10 @@ export default {
         .then(resp => {
           if (resp.status === 200) {
             if (resp.data && resp.data.code === 0) {
-              if (resp.data.data.length === 0) {
+              if (resp.data.data.count === 0) {
                 self.$message.error('没有更多内容啦！！！')
               } else {
-                self.myItems = self.myItems.concat(resp.data.data)
+                self.myItems = self.myItems.concat(resp.data.data.results)
                 self.foodPageOffset = self.foodPageOffset + 8
               }
             } else {
@@ -502,10 +502,10 @@ export default {
         .then(resp => {
           if (resp.status === 200) {
             if (resp.data && resp.data.code === 0) {
-              if (resp.data.data.length === 0) {
+              if (resp.data.data.count === 0) {
                 self.$message.error('没有更多内容啦！！！')
               } else {
-                self.myFans = self.myFans.concat(resp.data.data)
+                self.myFans = self.myFans.concat(resp.data.data.results)
                 self.fansPageOffset = self.fansPageOffset + 8
               }
             } else {
@@ -529,10 +529,10 @@ export default {
         .then(resp => {
           if (resp.status === 200) {
             if (resp.data && resp.data.code === 0) {
-              if (resp.data.data.length === 0) {
+              if (resp.data.data.count === 0) {
                 self.$message.error('没有更多内容啦！！！')
               } else {
-                self.myFollows = self.myFollows.concat(resp.data.data)
+                self.myFollows = self.myFollows.concat(resp.data.data.results)
                 self.followsPageOffset = self.followsPageOffset + 8
               }
             } else {
@@ -556,7 +556,7 @@ export default {
         .then(resp => {
           if (resp.status === 200) {
             if (resp.data && resp.data.code === 0) {
-              if (resp.data.data.length === 0) {
+              if (resp.data.data.count === 0) {
                 self.$message.error('没有更多内容啦！！！')
               } else {
                 self.myCollections = self.myCollections.concat(resp.data.data)
