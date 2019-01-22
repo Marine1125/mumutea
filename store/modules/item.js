@@ -3,7 +3,6 @@ const state = () => ({
   cookList: [],
   drinkList: [],
   bakeList: [],
-  handworkList: [],
   hotItemList: [],
   keyword: '',
   category: ''
@@ -21,9 +20,6 @@ const mutations = {
   },
   setBakeItem(state, val) {
     state.bakeList = val
-  },
-  setHandworkItem(state, val) {
-    state.handworkList = val
   },
   setKeyword(state, val) {
     state.keyword = val
@@ -48,9 +44,6 @@ const actions = {
   },
   setBakeItem({ commit }) {
     commit('setBakeItem', val)
-  },
-  setHandworkItem({ commit }) {
-    commit('setHandworkItem', val)
   },
   setHotItem({ commit }) {
     commit('setHotItem', val)

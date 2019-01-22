@@ -23,11 +23,18 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 //路由
 router.post('/uploadFiles', upload.single('file'), async (ctx, next) => {
-  let filePath = ctx.req.file.path
-  filePath = filePath.replace('static\\', '')
-  filePath = filePath.replace('static/', '')
-  ctx.body = {
-    file: filePath //返回文件路径
+  if (ctx.session.passport && ctx.session.passport.user) {
+    let filePath = ctx.req.file.path
+    filePath = filePath.replace('static\\', '')
+    filePath = filePath.replace('static/', '')
+    ctx.body = {
+      file: filePath //返回文件路径
+    }
+  } else {
+    ctx.body = {
+      code: -2,
+      msg: '用户未登录'
+    }
   }
 })
 

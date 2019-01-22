@@ -64,7 +64,7 @@ export default {
       .then(resp => {
         if (resp.status === 200) {
           if (resp.data && resp.data.code === 0) {
-            self.myFans = resp.data.data
+            self.myFans = resp.data.data.results
           } else {
             ctx.$message.error(`获取数据失败，错误码：${resp.data.msg}`)
           }
@@ -87,10 +87,10 @@ export default {
         .then(resp => {
           if (resp.status === 200) {
             if (resp.data && resp.data.code === 0) {
-              if (resp.data.data.length === 0) {
+              if (resp.data.data.count === 0) {
                 self.$message.error('没有更多内容啦！！！')
               } else {
-                self.myFans = self.myFans.concat(resp.data.data)
+                self.myFans = self.myFans.concat(resp.data.data.results)
                 self.fansPageOffset = self.fansPageOffset + 8
               }
             } else {

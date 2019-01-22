@@ -102,6 +102,9 @@ export default {
   data() {
     return {}
   },
+  mounted() {
+    console.log(JSON.stringify(this.items))
+  },
   methods: {
     toDetail: function(id) {
       this.$router.push({ path: '/items/itemDetail', query: { id: id } })

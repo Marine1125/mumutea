@@ -219,8 +219,9 @@ export default {
     },
     reviewItem: async function(index, row, status) {
       const self = this
-      row.status = status
-      await self.$axios.post('/items/reviewItem', row).then(resp => {
+      let rowData = row
+      rowData.status = status
+      await self.$axios.post('/items/reviewItem', rowData).then(resp => {
         if (resp.status === 200) {
           if (resp.data && resp.data.code === 0) {
             if (resp.data.data.length) {

@@ -70,12 +70,12 @@
             v-if="scope.row.active == '1'"
             size="mini"
             type="danger"
-            @click="deactiveLabel(scope.$index, scope.row)">去激活</el-button>
+            @click="updateLabel(scope.$index, scope.row,'0')">去激活</el-button>
           <el-button
             v-if="scope.row.active == '0'"
             size="mini"
             type="danger"
-            @click="activeLabel(scope.$index, scope.row)">激活</el-button>
+            @click="updateLabel(scope.$index, scope.row,'1')">激活</el-button>
           <el-button
             v-if="scope.row.active == '0'"
             size="mini"
@@ -210,19 +210,10 @@ export default {
         }
       })
     },
-    deactiveLabel: async function(index, row) {
+    updateLabel: async function(index, row, active) {
       const self = this
-      await self.$axios.post('/labels/deactiveLabel', row).then(resp => {
-        if (resp.status === 200) {
-          if (resp.data && resp.data.code === 0) {
-            self.refresh()
-          }
-        }
-      })
-    },
-    activeLabel: async function(index, row) {
-      const self = this
-      await self.$axios.post('/labels/activeLabel', row).then(resp => {
+      row.active = active
+      await self.$axios.post('/labels/updateLabel', row).then(resp => {
         if (resp.status === 200) {
           if (resp.data && resp.data.code === 0) {
             self.refresh()

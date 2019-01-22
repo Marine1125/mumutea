@@ -12,80 +12,127 @@ let router = new Router({
 })
 
 router.post('/addItem', async (ctx, next) => {
-  const creator = ctx.session.passport.user._id
-  console.log('123')
-  const {
-    title,
-    category,
-    tips,
-    steps,
-    ingredients,
-    filename,
-    summary,
-    label
-  } = ctx.request.body
-  let newItem = await Item.create({
-    title,
-    category,
-    tips,
-    steps,
-    ingredients,
-    filename,
-    summary,
-    label,
-    creator
-  })
-  if (newItem) {
-    ctx.body = {
-      code: 0,
-      msg: ''
+  if (ctx.session.passport && ctx.session.passport.user) {
+    const creator = ctx.session.passport.user._id
+    if (
+      ctx.request.body._id &&
+      ctx.request.body.title &&
+      ctx.request.body.category &&
+      ctx.request.body.tips &&
+      ctx.request.body.steps &&
+      ctx.request.body.ingredients &&
+      ctx.request.body.filename &&
+      ctx.request.body.summary &&
+      ctx.request.body.label &&
+      ctx.request.body.label.length < 5
+    ) {
+      const {
+        title,
+        category,
+        tips,
+        steps,
+        ingredients,
+        filename,
+        summary,
+        label
+      } = ctx.request.body
+      const result = await Item.create({
+        title,
+        category,
+        tips,
+        steps,
+        ingredients,
+        filename,
+        summary,
+        label,
+        creator
+      })
+      if (result) {
+        ctx.body = {
+          code: 0,
+          msg: ''
+        }
+      } else {
+        ctx.body = {
+          code: -1,
+          msg: 'create error'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '参数错误'
+      }
     }
   } else {
     ctx.body = {
-      code: -1,
-      msg: 'create error'
+      code: -2,
+      msg: '用户未登录'
     }
   }
 })
 
 router.post('/updateItem', async (ctx, next) => {
-  console.log('123')
-  const {
-    _id,
-    title,
-    category,
-    tips,
-    steps,
-    ingredients,
-    filename,
-    summary,
-    label
-  } = ctx.request.body
-  let result = await Item.updateOne(
-    { _id },
-    {
-      title,
-      category,
-      tips,
-      steps,
-      ingredients,
-      filename,
-      summary,
-      label,
-      status: '0'
-    }
-  )
-  if (result) {
-    ctx.body = {
-      code: 0,
-      data: _id,
-      msg: ''
+  if (ctx.session.passport && ctx.session.passport.user) {
+    const creator = ctx.session.passport.user._id
+    if (
+      ctx.request.body._id &&
+      ctx.request.body.title &&
+      ctx.request.body.category &&
+      ctx.request.body.tips &&
+      ctx.request.body.steps &&
+      ctx.request.body.ingredients &&
+      ctx.request.body.filename &&
+      ctx.request.body.summary &&
+      ctx.request.body.label &&
+      ctx.request.body.label.length < 5
+    ) {
+      const {
+        _id,
+        title,
+        category,
+        tips,
+        steps,
+        ingredients,
+        filename,
+        summary,
+        label
+      } = ctx.request.body
+      const result = await Item.updateOne(
+        { _id },
+        {
+          title,
+          category,
+          tips,
+          steps,
+          ingredients,
+          filename,
+          summary,
+          label,
+          status: '0'
+        }
+      )
+      if (result) {
+        ctx.body = {
+          code: 0,
+          msg: '更新成功'
+        }
+      } else {
+        ctx.body = {
+          code: -1,
+          msg: '更新失败'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '参数错误'
+      }
     }
   } else {
     ctx.body = {
-      code: -1,
-      data: '',
-      msg: 'create error'
+      code: -2,
+      msg: '用户未登录'
     }
   }
 })
@@ -155,8 +202,8 @@ router.get('/getItemsByTitle', async (ctx, next) => {
 })
 
 router.get('/getItemsByCreator', async (ctx, next) => {
-  const offset = parseInt(ctx.query.offset)
-  const limit = parseInt(ctx.query.limit)
+  const offset = parseInt(ctx.query.offset ? ctx.query.offset : 0)
+  const limit = parseInt(ctx.query.limit ? ctx.query.limit : 20)
   const status = ctx.query.status ? ctx.query.status : '1'
   let items = await Item.find({ creator: ctx.query.creator, status })
     .limit(limit)

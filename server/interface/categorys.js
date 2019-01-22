@@ -9,84 +9,116 @@ let router = new Router({
 })
 
 router.post('/addCategory', async (ctx, next) => {
-  console.log(ctx)
-  const { categoryname, sort } = ctx.request.body
-  let newCategory = await Category.create({
-    categoryname,
-    sort
-  })
-  if (newCategory) {
-    ctx.body = {
-      code: 0,
-      data: categoryname
+  if (ctx.session.passport && ctx.session.passport.user) {
+    const { categoryname, sort } = ctx.request.body
+    if (categoryname && sort) {
+      const count = await Category.countDocuments({
+        categoryname
+      })
+      if (count === 0) {
+        const result = await Category.create({
+          categoryname,
+          sort
+        })
+        if (result) {
+          ctx.body = {
+            code: 0,
+            data: result,
+            msg: '创建成功'
+          }
+        } else {
+          ctx.body = {
+            code: -1,
+            msg: '创建失败'
+          }
+        }
+      } else {
+        ctx.body = {
+          code: -1,
+          msg: '数据已存在'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '字段为空'
+      }
     }
   } else {
     ctx.body = {
-      code: -1,
-      msg: '创建失败'
+      code: -2,
+      msg: '用户未登录'
     }
   }
 })
 
 router.post('/deleteCategory', async (ctx, next) => {
-  console.log(ctx)
-  const _id = ctx.request.body._id
-  const result = await Category.remove({
-    _id
-  })
-  if (result) {
-    ctx.body = {
-      code: 0,
-      data: result
+  if (ctx.session.passport && ctx.session.passport.user) {
+    if (ctx.request.body._id) {
+      const _id = ctx.request.body._id
+      const result = await Category.remove({
+        _id
+      })
+      if (result) {
+        ctx.body = {
+          code: 0,
+          data: result,
+          msg: '删除成功'
+        }
+      } else {
+        ctx.body = {
+          code: -1,
+          msg: '删除失败'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '字段为空'
+      }
     }
   } else {
     ctx.body = {
-      code: -1,
-      msg: '删除失败'
+      code: -2,
+      msg: '用户为登录'
     }
   }
 })
 
-router.post('/deactiveCategory', async (ctx, next) => {
-  console.log(ctx.request.body)
-  const { _id, categoryname } = ctx.request.body
-  const update = new Date()
-  const active = 0
-  const result = await Category.updateOne(
-    { _id },
-    { $set: { categoryname: categoryname, update: update, active: active } }
-  )
-  if (result) {
-    ctx.body = {
-      code: 0,
-      data: result
+router.post('/updateCategory', async (ctx, next) => {
+  if (ctx.session.passport && ctx.session.passport.user) {
+    if (
+      ctx.request.body._id &&
+      ctx.request.body.categoryname &&
+      ctx.request.body._id.active
+    ) {
+      const { _id, categoryname, active } = ctx.request.body
+      const update = new Date()
+      const result = await Category.updateOne(
+        { _id },
+        { $set: { categoryname: categoryname, update: update, active: active } }
+      )
+      if (result) {
+        ctx.body = {
+          code: 0,
+          data: result
+        }
+      } else {
+        ctx.body = {
+          code: -1,
+          msg: '更新失败'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '字段为空'
+      }
     }
   } else {
     ctx.body = {
-      code: -1,
-      msg: '更新失败'
-    }
-  }
-})
-
-router.post('/activeCategory', async (ctx, next) => {
-  console.log(ctx.request.body)
-  const { _id, categoryname } = ctx.request.body
-  const update = new Date()
-  const active = 1
-  const result = await Category.updateOne(
-    { _id },
-    { $set: { categoryname: categoryname, update: update, active: active } }
-  )
-  if (result) {
-    ctx.body = {
-      code: 0,
-      data: result
-    }
-  } else {
-    ctx.body = {
-      code: -1,
-      msg: '更新失败'
+      code: -2,
+      msg: '用户未登录'
     }
   }
 })
@@ -110,38 +142,41 @@ router.get('/getCategoryList', async (ctx, next) => {
       .limit(limit)
       .skip(offset)
       .lean()
-    for (let i = 0; i < results.length; i++) {
-      results[i].create = new Date(results[i].create).toLocaleDateString()
-      results[i].update = new Date(results[i].update).toLocaleDateString()
-    }
-  }
-
-  if (results.length > 0) {
-    ctx.body = {
-      code: 0,
-      data: {
-        count,
-        results
+    if (results) {
+      for (let i = 0; i < results.length; i++) {
+        results[i].create = new Date(results[i].create).toLocaleDateString()
+        results[i].update = new Date(results[i].update).toLocaleDateString()
+      }
+      ctx.body = {
+        code: 0,
+        data: { count, results }
+      }
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '数据获取失败'
       }
     }
   } else {
     ctx.body = {
       code: -1,
-      msg: '数据获取失败'
+      msg: '没有数据',
+      data: { count: 0, results: [] }
     }
   }
 })
 
-router.get('/getCategoryById', async (ctx, next) => {
-  console.log(ctx)
-  const id = ctx.query.categoryid
-  let category = await Category.findOne({
-    id
+router.get('/getCategory', async (ctx, next) => {
+  const _id = ctx.query._id ? ctx.query._id : ''
+  let categoryname = ctx.query.categoryname ? ctx.query.categoryname : ''
+  let result = await Category.findOne({
+    categoryname: { $regex: categoryname },
+    _id: _id
   })
-  if (category) {
+  if (result) {
     ctx.body = {
       code: 0,
-      data: category
+      data: result
     }
   } else {
     ctx.body = {

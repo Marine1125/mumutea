@@ -9,62 +9,97 @@ let router = new Router({
 })
 
 router.post('/addLabel', async (ctx, next) => {
-  console.log(ctx)
-  const { labelname, sort } = ctx.request.body
-  let newLabel = await Label.create({
-    labelname,
-    sort
-  })
-  if (newLabel) {
-    ctx.body = {
-      code: 0,
-      data: labelname
+  if (ctx.session.passport && ctx.session.passport.user) {
+    const { labelname, sort } = ctx.request.body
+    let newLabel = await Label.create({
+      labelname,
+      sort
+    })
+    if (newLabel) {
+      ctx.body = {
+        code: 0,
+        data: labelname
+      }
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '创建失败'
+      }
     }
   } else {
     ctx.body = {
-      code: -1,
-      msg: '创建失败'
+      code: -2,
+      msg: '用户未登录'
     }
   }
 })
 
 router.post('/deleteLabel', async (ctx, next) => {
-  console.log(ctx)
-  const _id = ctx.request.body._id
-  const result = await Label.remove({
-    _id
-  })
-  if (result) {
-    ctx.body = {
-      code: 0,
-      data: result
+  if (ctx.session.passport && ctx.session.passport.user) {
+    if (ctx.request.body._id) {
+      const _id = ctx.request.body._id
+      const result = await Label.remove({
+        _id
+      })
+      if (result) {
+        ctx.body = {
+          code: 0,
+          data: result
+        }
+      } else {
+        ctx.body = {
+          code: -1,
+          msg: '删除失败'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '参数为空'
+      }
     }
   } else {
     ctx.body = {
-      code: -1,
-      msg: '删除失败'
+      code: -2,
+      msg: '用户未登录'
     }
   }
 })
 
-router.post('/deactiveLabel', async (ctx, next) => {
-  console.log(ctx.request.body)
-  const { _id, labelname } = ctx.request.body
-  const update = new Date()
-  const active = 0
-  const result = await Label.updateOne(
-    { _id },
-    { $set: { labelname: labelname, update: update, active: active } }
-  )
-  if (result) {
-    ctx.body = {
-      code: 0,
-      data: result
+router.post('/updateLabel', async (ctx, next) => {
+  if (ctx.session.passport && ctx.session.passport.user) {
+    if (
+      ctx.request.body._id &&
+      ctx.request.body.labelname &&
+      ctx.request.body.active
+    ) {
+      const { _id, labelname, active } = ctx.request.body
+      const update = new Date()
+      const result = await Label.updateOne(
+        { _id },
+        { $set: { labelname: labelname, update: update, active: active } }
+      )
+      if (result) {
+        ctx.body = {
+          code: 0,
+          data: result
+        }
+      } else {
+        ctx.body = {
+          code: -1,
+          msg: '更新失败'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '参数为空'
+      }
     }
   } else {
     ctx.body = {
-      code: -1,
-      msg: '更新失败'
+      code: -2,
+      msg: '用户未登录'
     }
   }
 })

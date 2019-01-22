@@ -253,20 +253,10 @@ router.get('/getUserById', async ctx => {
 })
 
 router.post('/userUpdate', async ctx => {
-  const {
-    _id,
-    photo,
-    province,
-    city,
-    birthday,
-    constellation,
-    sex,
-    introduce
-  } = ctx.request.body
-  const result = await User.updateOne(
-    { _id },
-    {
-      $set: {
+  if (ctx.session.passport && ctx.session.passport.user) {
+    if (ctx.request.body._id) {
+      const {
+        _id,
         photo,
         province,
         city,
@@ -274,18 +264,42 @@ router.post('/userUpdate', async ctx => {
         constellation,
         sex,
         introduce
+      } = ctx.request.body
+      const result = await User.updateOne(
+        { _id },
+        {
+          $set: {
+            photo,
+            province,
+            city,
+            birthday,
+            constellation,
+            sex,
+            introduce
+          }
+        }
+      )
+      if (result) {
+        ctx.body = {
+          code: 0,
+          data: result
+        }
+      } else {
+        ctx.body = {
+          code: -1,
+          msg: '更新失败'
+        }
       }
-    }
-  )
-  if (result) {
-    ctx.body = {
-      code: 0,
-      data: result
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '参数为空'
+      }
     }
   } else {
     ctx.body = {
-      code: -1,
-      msg: '更新失败'
+      code: -2,
+      msg: '用户未登录'
     }
   }
 })
@@ -334,24 +348,38 @@ router.get('/getUserList', async ctx => {
   }
 })
 router.post('/updateRole', async ctx => {
-  const { _id, role } = ctx.request.body
-  const result = await User.updateOne(
-    { _id },
-    {
-      $set: {
-        role
+  if (ctx.session.passport && ctx.session.passport.user) {
+    if (ctx.request.body._id && ctx.request.body.role) {
+      const { _id, role } = ctx.request.body
+      const result = await User.updateOne(
+        { _id },
+        {
+          $set: {
+            role
+          }
+        }
+      )
+      if (result) {
+        ctx.body = {
+          code: 0,
+          data: result
+        }
+      } else {
+        ctx.body = {
+          code: -1,
+          msg: '更新失败'
+        }
       }
-    }
-  )
-  if (result) {
-    ctx.body = {
-      code: 0,
-      data: result
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '参数为空'
+      }
     }
   } else {
     ctx.body = {
-      code: -1,
-      msg: '更新失败'
+      code: -2,
+      msg: '用户未登录'
     }
   }
 })

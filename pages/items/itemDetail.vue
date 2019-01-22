@@ -285,38 +285,26 @@ export default {
     addCollection: async function(itemid) {
       const self = this
       let isLogin = ''
-      await self.$axios.get('/users/getLoginUser').then(resp => {
+      self.$axios.post('/collections/addCollection', { itemid }).then(resp => {
         if (resp.status === 200) {
           if (resp.data && resp.data.code === 0) {
-            isLogin = true
+            self.$message({
+              message: '成功收藏',
+              type: 'success'
+            })
+            self.isFollow = true
+          } else if (resp.data.code === -2) {
+            self.$router.push({ path: '/users/signin' })
           } else {
-            isLogin = false
+            self.$message.error('创建失败：' + resp.data.msg)
           }
         } else {
           self.$message.error('服务器内部错误，错误码：' + resp.status)
         }
       })
-      if (isLogin) {
-        self.$axios
-          .post('/collections/addCollection', { itemid })
-          .then(resp => {
-            if (resp.status === 200) {
-              if (resp.data && resp.data.code === 0) {
-                self.$message({
-                  message: '成功收藏',
-                  type: 'success'
-                })
-                self.isFollow = true
-              } else {
-                self.$message.error(resp.data.msg)
-              }
-            } else {
-              self.$message.error('服务器内部错误，错误码：' + resp.status)
-            }
-          })
-      } else {
-        self.$router.push({ path: '/users/signin' })
-      }
+      // } else {
+      //   self.$router.push({ path: '/users/signin' })
+      // }
     },
     addFollow: async function(userid) {
       const self = this

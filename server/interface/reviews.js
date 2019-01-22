@@ -7,26 +7,37 @@ let router = new Router({
 })
 
 router.post('/addReview', async (ctx, next) => {
-  console.log(ctx.request.body)
-  const { reason, result, itemid } = ctx.request.body
-  let reviewer = ctx.session.passport.user._id
-  console.log(reviewer)
-  let newReview = await Reviews.create({
-    reason,
-    result,
-    itemid,
-    reviewer
-  })
-
-  if (newReview) {
-    ctx.body = {
-      code: 0,
-      data: ''
+  if (ctx.session.passport && ctx.session.passport.user) {
+    let reviewer = ctx.session.passport.user._id
+    if (ctx.request.body.itemid && ctx.request.body.result) {
+      const { reason, result, itemid } = ctx.request.body
+      let newReview = await Reviews.create({
+        reason,
+        result,
+        itemid,
+        reviewer
+      })
+      if (newReview) {
+        ctx.body = {
+          code: 0,
+          data: ''
+        }
+      } else {
+        ctx.body = {
+          code: -1,
+          msg: '创建失败'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '参数为空'
+      }
     }
   } else {
     ctx.body = {
-      code: -1,
-      msg: '创建失败'
+      code: -2,
+      msg: '用户未登录'
     }
   }
 })
