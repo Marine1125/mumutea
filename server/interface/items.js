@@ -15,7 +15,6 @@ router.post('/addItem', async (ctx, next) => {
   if (ctx.session.passport && ctx.session.passport.user) {
     const creator = ctx.session.passport.user._id
     if (
-      ctx.request.body._id &&
       ctx.request.body.title &&
       ctx.request.body.category &&
       ctx.request.body.tips &&
