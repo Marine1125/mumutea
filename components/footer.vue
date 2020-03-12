@@ -52,7 +52,7 @@
         </div>
       </div>
       <div style="clear:both"/>
-      <div style="text-align:center">copyright:www.mumufamily.cn</div>
+      <div style="text-align:center">© 2019-2029 www.mumufamily.cn 版权所有 ICP证：琼ICP备18005282号-1</div>
     </footer>
   </div>
 </template>
