@@ -52,7 +52,9 @@
         </div>
       </div>
       <div style="clear:both"/>
-      <div style="text-align:center">© 2019-2029 www.mumufamily.cn 版权所有 ICP证：琼ICP备18005282号-1</div>
+      <div style="text-align:center">© 2019-2029 www.mumufamily.cn 版权所有 ICP证：<a
+        target="_blank"
+        href="http://www.beian.miit.gov.cn">琼ICP备18005282号-1</a></div>
     </footer>
   </div>
 </template>
